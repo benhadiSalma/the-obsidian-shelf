@@ -23,4 +23,9 @@ class Book extends Model
     protected $casts = [
         'tropes' => 'array',
     ];
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }
