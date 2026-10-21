@@ -26,6 +26,6 @@ class BookController extends Controller
     
     public function show(Book $book)
     {
-        return response()->json($book);
+        return response()->json($book->load('reviews.user'));
     }
 }

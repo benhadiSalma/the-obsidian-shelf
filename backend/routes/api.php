@@ -25,4 +25,6 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::get('/wishlist', [WishlistController::class, 'index']);
     Route::post('/wishlist/toggle', [WishlistController::class, 'toggle']);
+
+    Route::post('/reviews', [ReviewController::class, 'store']);
 });
