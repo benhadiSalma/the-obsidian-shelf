@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,11 +15,9 @@
     <div id="embers-container" aria-hidden="true"></div>
 
     <!-- Royal Toast Notification Container -->
-    <div id="toast-container"></div>
+    <div id="toast-container" role="status" aria-live="polite"></div>
 
-    <!-- =========================================================
-         1. LANDING GATE: THE OPEN GRIMOIRE (3D BOOK)
-         ========================================================= -->
+    <!-- LANDING GATE: THE OPEN GRIMOIRE -->
     <section id="grimoire-gate" class="grimoire-overlay">
         <div class="book">
             <div class="page left-page">
@@ -45,9 +44,7 @@
         </div>
     </section>
 
-    <!-- =========================================================
-         2. MAIN ARCHIVE HALL (THE BOOKSTORE APPLICATION)
-         ========================================================= -->
+    <!-- MAIN ARCHIVE HALL -->
     <div id="archive-hall" class="archive-hall is-hidden">
 
         <header class="royal-header">
@@ -74,47 +71,70 @@
                 Browse our live catalog, reserve manuscripts for in-store pickup, and share your critical whispers.
             </p>
 
-            <!-- Main Navigation Tabs -->
-            <nav class="archive-nav">
+            <!-- Main Navigation -->
+            <nav class="archive-nav" aria-label="Main navigation">
                 <button class="nav-tab active" data-view="catalog" type="button">
                     📚 Bookstore Catalog
                 </button>
+
                 <button class="nav-tab" data-view="profile" type="button">
-                    📜 My Scribe Profile &amp; Purchases <span id="purchases-count" class="badge-count">0</span>
+                    📜 My Scribe Profile &amp; Purchases
+                    <span id="purchases-count" class="badge-count">0</span>
                 </button>
+
                 <button class="nav-tab" data-view="wishlist" type="button">
-                    🖤 Velvet Wishlist <span id="wishlist-count" class="badge-count">0</span>
+                    🖤 Velvet Wishlist
+                    <span id="wishlist-count" class="badge-count">0</span>
                 </button>
+
                 <button class="nav-tab" data-view="rules" type="button">
                     📯 Laws of the Archive
                 </button>
             </nav>
 
-            <!-- Search & Stock Filter Controls -->
+            <!-- Search and Filters -->
             <div id="search-controls" class="archive-controls">
                 <div class="search-wrapper">
                     <span class="search-icon">🔍</span>
-                    <input type="text" id="search-input" placeholder="Search by title, author, ISBN code, or trope...">
+                    <label class="visually-hidden" for="search-input">Search books</label>
+                    <input
+                        type="search"
+                        id="search-input"
+                        placeholder="Search by title, author, ISBN code, or trope..."
+                        autocomplete="off"
+                    >
                 </div>
 
                 <div class="filter-pills">
-                    <button class="filter-pill active" data-filter="all" type="button">All Manuscripts</button>
-                    <button class="filter-pill" data-filter="available" type="button">In Stock Only</button>
+                    <button class="filter-pill active" data-filter="all" type="button">
+                        All Manuscripts
+                    </button>
+
+                    <button class="filter-pill" data-filter="available" type="button">
+                        In Stock Only
+                    </button>
                 </div>
             </div>
         </header>
 
-        <!-- VIEW A: CATALOG & WISHLIST BOOKSHELF -->
+        <!-- CATALOG -->
         <main id="catalog-view" class="hall-content">
             <div id="loading-state" class="loading-scroll">
                 <div class="seal-spinner">✦</div>
                 <p>Unsealing the Obsidian Vaults...</p>
             </div>
 
+            <div class="catalog-tools">
+                <p id="catalog-summary" class="catalog-summary" aria-live="polite"></p>
+                <button id="btn-reload-catalog" type="button" class="ghost-gold-btn">
+                    ↻ Refresh catalog
+                </button>
+            </div>
+
             <div id="books-container" class="bookshelf-grid"></div>
         </main>
 
-        <!-- VIEW B: USER PROFILE & ACQUIRED/RESERVED BOOKS (RUBRIC REQUIREMENT) -->
+        <!-- USER PROFILE AND PURCHASES -->
         <section id="profile-view" class="hall-content is-hidden">
             <div class="profile-card">
                 <div class="profile-banner"></div>
@@ -122,13 +142,65 @@
                 <div class="profile-header">
                     <div class="profile-avatar" id="profile-avatar-letter">✧</div>
                     <h2 id="profile-username">Wandering Visitor</h2>
-                    <p class="profile-role" id="profile-email">Authenticate to access your personal archive record</p>
+                    <p class="profile-role" id="profile-email">
+                        Authenticate to access your personal archive record
+                    </p>
                 </div>
 
                 <div class="profile-body">
-                    <h3 class="section-title">My Reserved &amp; Acquired Manuscripts</h3>
+                    <form id="profile-form" class="profile-edit-form is-hidden">
+                        <h3 class="section-title">My Account Details</h3>
+
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label for="profile-name">Name</label>
+                                <input id="profile-name" name="name" type="text"
+                                       required maxlength="255" autocomplete="name">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="profile-handle">Username</label>
+                                <input id="profile-handle" name="username" type="text"
+                                       required minlength="3" maxlength="50"
+                                       pattern="[a-zA-Z0-9_-]+" autocomplete="username">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="profile-contact">Email</label>
+                                <input id="profile-contact" name="email" type="email"
+                                       required autocomplete="email">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="profile-password">New password (optional)</label>
+                                <input id="profile-password" name="password" type="password"
+                                       minlength="8" autocomplete="new-password"
+                                       placeholder="Leave blank to keep current password">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="profile-password-confirm">Confirm new password</label>
+                                <input id="profile-password-confirm"
+                                       name="password_confirmation" type="password"
+                                       minlength="8" autocomplete="new-password">
+                            </div>
+                        </div>
+
+                        <p id="profile-error" class="form-message" role="alert"></p>
+
+                        <button class="pill-btn" type="submit">
+                            Save profile changes
+                        </button>
+                    </form>
+
+                    <h3 class="section-title">
+                        My Reservations &amp; Purchase History
+                    </h3>
+
                     <p class="section-desc">
-                        Every reserved manuscript is prepared at our counter for pickup and payment. Once acquired, you may inscribe an official review.
+                        Reservations are confirmed for pickup and payment at the counter.
+                        As agreed for this fictional shop, every reservation is counted
+                        in your purchase history. You can review reserved books.
                     </p>
 
                     <div id="profile-purchases-list" class="purchases-list"></div>
@@ -136,7 +208,7 @@
             </div>
         </section>
 
-        <!-- VIEW C: ROYAL PARCHMENT SCROLL (ARCHIVE RULES) -->
+        <!-- RULES -->
         <section id="rules-view" class="hall-content is-hidden">
             <div class="royal-stage">
                 <div class="trumpet-wrap left">
@@ -148,26 +220,51 @@
                     <div class="vertical-scroll">
                         <div class="scroll-topline">Official Conduct</div>
                         <h2 class="scroll-title">Rules of the Archive</h2>
+
                         <p class="scroll-subtitle">
-                            Every reader entering The Obsidian Shelf agrees to respect the collection, the curators, and the quiet dignity of the sanctuary.
+                            Every reader entering The Obsidian Shelf agrees to respect
+                            the collection, the curators, and the quiet dignity of
+                            the sanctuary.
                         </p>
+
                         <div class="scroll-divider"></div>
 
                         <div class="rule-list">
                             <article class="rule-card">
-                                <span class="rule-badge">Rule I — Live Stock &amp; ISBN Registry</span>
+                                <span class="rule-badge">
+                                    Rule I — Live Stock &amp; ISBN Registry
+                                </span>
                                 <h3>Every Tome Carries a Unique Seal</h3>
-                                <p>Each manuscript is cataloged with a unique ISBN identifier, live stock counter, and curator pricing. Reserving a book immediately deducts it from the public vault.</p>
+                                <p>
+                                    Each manuscript is cataloged with a unique ISBN
+                                    identifier, live stock counter, and curator pricing.
+                                    Reserving a book immediately deducts it from the public vault.
+                                </p>
                             </article>
+
                             <article class="rule-card">
-                                <span class="rule-badge">Rule II — Pickup &amp; Counter Payment</span>
+                                <span class="rule-badge">
+                                    Rule II — Pickup &amp; Counter Payment
+                                </span>
                                 <h3>Honor Your Reservations</h3>
-                                <p>Upon reservation, scribes receive an official pickup confirmation window. Reserved manuscripts are held for 7 days at the archive desk for in-person collection and payment.</p>
+                                <p>
+                                    Upon reservation, scribes receive an official pickup
+                                    confirmation window. Reserved manuscripts are held for
+                                    7 days at the archive desk for in-person collection
+                                    and payment.
+                                </p>
                             </article>
+
                             <article class="rule-card">
-                                <span class="rule-badge">Rule III — Scribe Reviews</span>
+                                <span class="rule-badge">
+                                    Rule III — Scribe Reviews
+                                </span>
                                 <h3>Inscribe Honest Critiques</h3>
-                                <p>From your personal profile or the manuscript detail parchment, you may rate books from 1 to 5 stars and leave a written review visible to all visitors.</p>
+                                <p>
+                                    After reserving a manuscript, you may rate it from
+                                    1 to 5 stars and leave one written review,
+                                    visible to all visitors.
+                                </p>
                             </article>
                         </div>
 
@@ -186,56 +283,104 @@
 
         <footer class="royal-footer">
             <div class="seal-decoration"></div>
-            <p>Sealed under the authority of <strong>The Obsidian Shelf</strong> — Decoupled REST Architecture (EhB)</p>
+            <p>
+                Sealed under the authority of
+                <strong>The Obsidian Shelf</strong>
+                — Decoupled REST Architecture (EhB)
+            </p>
         </footer>
     </div>
 
-    <!-- =========================================================
-         3. MODAL: BREAK THE SEAL (LOGIN & REGISTER)
-         ========================================================= -->
-    <div id="auth-modal" class="royal-modal-overlay">
-        <div class="gatekeeper-container">
-            <button type="button" class="modal-close" data-close-modal="auth-modal">&times;</button>
-            <div class="seal-icon">✦</div>
+    <!-- LOGIN AND REGISTRATION MODAL -->
+    <div id="auth-modal" class="royal-modal-overlay"
+         role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
 
+        <div class="gatekeeper-container modal-panel">
+            <button type="button" class="modal-close"
+                    data-close-modal="auth-modal"
+                    aria-label="Close login dialog">&times;</button>
+
+            <div class="seal-icon">✦</div>
             <h2 id="auth-modal-title">Break the Seal</h2>
+
             <p id="auth-modal-subtitle" class="subtitle">
                 Enter your credentials to unlock the archive via Laravel Sanctum.
             </p>
+
             <div class="seal-decoration"></div>
 
-            <!-- Login Form -->
+            <!-- Login -->
             <form id="login-form">
                 <div class="input-group">
-                    <label for="login-email">Scribe's Identifier (Email)</label>
-                    <input id="login-email" type="email" required placeholder="reader@test.com">
+                    <label for="login-email">
+                        Scribe's Identifier (Email)
+                    </label>
+                    <input id="login-email" type="email" required
+                           autocomplete="email" placeholder="reader@example.com">
                 </div>
+
                 <div class="input-group">
-                    <label for="login-password">Secret Incantation (Password)</label>
-                    <input id="login-password" type="password" required placeholder="••••••••">
+                    <label for="login-password">
+                        Secret Incantation (Password)
+                    </label>
+                    <input id="login-password" type="password" required
+                           autocomplete="current-password" placeholder="••••••••">
                 </div>
-                <button type="submit" class="gold-action-btn">Unlock the Vault</button>
+
+                <p id="login-error" class="form-message" role="alert"></p>
+
+                <button type="submit" class="gold-action-btn">
+                    Unlock the Vault
+                </button>
             </form>
 
-            <!-- Register Form -->
+            <!-- Registration -->
             <form id="register-form" class="is-hidden">
                 <div class="input-group">
                     <label for="reg-name">Scribe Name</label>
-                    <input id="reg-name" type="text" required placeholder="Feyre Archeron">
+                    <input id="reg-name" type="text" required
+                           autocomplete="name" placeholder="Feyre Archeron">
                 </div>
+
+                <div class="input-group">
+                    <label for="reg-username">
+                        Username (letters, numbers, _ or -)
+                    </label>
+                    <input id="reg-username" type="text"
+                           required minlength="3" maxlength="50"
+                           pattern="[a-zA-Z0-9_-]+"
+                           autocomplete="username" placeholder="VelvetReader">
+                </div>
+
                 <div class="input-group">
                     <label for="reg-email">Email Address</label>
-                    <input id="reg-email" type="email" required placeholder="scribe@obsidian.test">
+                    <input id="reg-email" type="email" required
+                           autocomplete="email" placeholder="scribe@obsidian.test">
                 </div>
+
                 <div class="input-group">
-                    <label for="reg-password">Create Incantation (Min. 8 chars)</label>
-                    <input id="reg-password" type="password" required minlength="8" placeholder="••••••••">
+                    <label for="reg-password">
+                        Create Incantation (Min. 8 chars)
+                    </label>
+                    <input id="reg-password" type="password"
+                           required minlength="8"
+                           autocomplete="new-password" placeholder="••••••••">
                 </div>
+
                 <div class="input-group">
-                    <label for="reg-password-confirm">Confirm Incantation</label>
-                    <input id="reg-password-confirm" type="password" required minlength="8" placeholder="••••••••">
+                    <label for="reg-password-confirm">
+                        Confirm Incantation
+                    </label>
+                    <input id="reg-password-confirm" type="password"
+                           required minlength="8"
+                           autocomplete="new-password" placeholder="••••••••">
                 </div>
-                <button type="submit" class="gold-action-btn">Inscribe My Name</button>
+
+                <p id="register-error" class="form-message" role="alert"></p>
+
+                <button type="submit" class="gold-action-btn">
+                    Inscribe My Name
+                </button>
             </form>
 
             <div class="auth-links">
@@ -246,26 +391,36 @@
         </div>
     </div>
 
-    <!-- =========================================================
-         4. MODAL: MANUSCRIPT DETAIL PAGE & REVIEWS
-         ========================================================= -->
-    <div id="book-modal" class="royal-modal-overlay">
-        <div class="royal-modal-scroll">
-            <button type="button" class="modal-close dark-close" data-close-modal="book-modal">&times;</button>
+    <!-- BOOK DETAILS AND REVIEWS -->
+    <div id="book-modal" class="royal-modal-overlay"
+         role="dialog" aria-modal="true" aria-labelledby="modal-book-title">
 
-            <div class="modal-kicker" id="modal-book-tropes">Romantasy Manuscript</div>
+        <div class="royal-modal-scroll modal-panel">
+            <button type="button" class="modal-close dark-close"
+                    data-close-modal="book-modal"
+                    aria-label="Close book details">&times;</button>
+
+            <div class="modal-kicker" id="modal-book-tropes">
+                Romantasy Manuscript
+            </div>
+
             <h2 class="modal-title" id="modal-book-title">Book Title</h2>
             <p class="modal-author" id="modal-book-author">By Author</p>
-            <p class="modal-isbn" id="modal-book-isbn">ISBN: 000-0000000000</p>
+            <p class="modal-isbn" id="modal-book-isbn">
+                ISBN: 000-0000000000
+            </p>
 
             <p class="modal-synopsis" id="modal-book-synopsis"></p>
 
-            <!-- Pickup Confirmation Box (Shown after reservation) -->
-            <div id="modal-pickup-confirmation" class="pickup-confirmation-box is-hidden"></div>
+            <!-- Pickup Confirmation -->
+            <div id="modal-pickup-confirmation"
+                 class="pickup-confirmation-box is-hidden"></div>
 
             <div class="modal-meta-bar">
                 <span id="modal-book-price" class="parchment-badge">€0.00</span>
-                <span id="modal-book-stock" class="parchment-badge">0 in vault</span>
+                <span id="modal-book-stock" class="parchment-badge">
+                    0 in vault
+                </span>
                 <button id="modal-reserve-btn" class="pill-btn" type="button">
                     📜 Reserve &amp; Confirm Pickup
                 </button>
@@ -273,14 +428,21 @@
 
             <div class="scroll-divider"></div>
 
-            <!-- Reviews Section -->
-            <h3 class="reviews-heading">Whispers from the Scribes (Reviews)</h3>
+            <!-- Reviews -->
+            <h3 class="reviews-heading">
+                Whispers from the Scribes (Reviews)
+            </h3>
+
             <div id="modal-reviews-list" class="reviews-list"></div>
 
-            <!-- Write Review Form -->
+            <p id="review-hint" class="review-hint" aria-live="polite"></p>
+
             <form id="review-form" class="review-form">
                 <h4>Inscribe Your Review (Score &amp; Critique)</h4>
+
                 <div class="review-inputs">
+                    <label for="review-rating">Your rating</label>
+
                     <select id="review-rating" required>
                         <option value="5">★★★★★ — 5/5 Masterpiece</option>
                         <option value="4">★★★★☆ — 4/5 Enchanting</option>
@@ -288,13 +450,23 @@
                         <option value="2">★★☆☆☆ — 2/5 Faded Ink</option>
                         <option value="1">★☆☆☆☆ — 1/5 Cursed Tome</option>
                     </select>
-                    <textarea id="review-comment" rows="3" required placeholder="Write your review of this manuscript..."></textarea>
-                    <button type="submit" class="pill-btn">Publish Review</button>
+
+                    <label for="review-comment">Your review</label>
+                    <textarea id="review-comment" rows="3"
+                              required minlength="3" maxlength="1000"
+                              placeholder="Write your review of this manuscript..."></textarea>
+
+                    <p id="review-error" class="form-message" role="alert"></p>
+
+                    <button type="submit" class="pill-btn">
+                        Publish Review
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
+    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

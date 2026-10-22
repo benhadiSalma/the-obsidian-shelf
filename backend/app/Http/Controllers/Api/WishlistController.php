@@ -3,40 +3,62 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Wishlist;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class WishlistController extends Controller
 {
-    
-    public function index(Request $request)
+    /**
+     * Return all books in the authenticated
+     * user's wishlist.
+     */
+    public function index(Request $request): JsonResponse
     {
-        return response()->json($request->user()->wishlists()->with('book')->get());
+        $wishlist = $request->user()
+            ->wishlists()
+            ->with('book')
+            ->get();
+
+        return response()->json($wishlist);
     }
 
-    
-    public function toggle(Request $request)
+    /**
+     * Add or remove a book from the wishlist.
+     */
+    public function toggle(Request $request): JsonResponse
     {
-        $request->validate([
-            'book_id' => 'required|exists:books,id'
+        $data = $request->validate([
+            'book_id' => [
+                'required',
+                'integer',
+                'exists:books,id',
+            ],
         ]);
 
         $user = $request->user();
-        
-        
-        $wishlist = Wishlist::where('user_id', $user->id)
-                            ->where('book_id', $request->book_id)
-                            ->first();
 
+        $wishlist = $user->wishlists()
+            ->where('book_id', $data['book_id'])
+            ->first();
+
+        // Remove the book if it is already saved.
         if ($wishlist) {
-            $wishlist->delete(); 
-            return response()->json(['message' => 'Livre retiré de la liste d\'envies.']);
-        } else {
-            Wishlist::create([ 
-                'user_id' => $user->id,
-                'book_id' => $request->book_id
-            ]);
-            return response()->json(['message' => 'Livre ajouté à la liste d\'envies !'], 201);
+            $wishlist->delete();
+
+            return response()->json([
+                'message' => 'Book removed from wishlist.',
+                'wishlisted' => false,
+            ], 200);
         }
+
+        // Otherwise add it to the wishlist.
+        $user->wishlists()->create([
+            'book_id' => $data['book_id'],
+        ]);
+
+        return response()->json([
+            'message' => 'Book added to wishlist.',
+            'wishlisted' => true,
+        ], 201);
     }
 }

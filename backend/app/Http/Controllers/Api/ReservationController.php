@@ -3,47 +3,49 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Book;
-use App\Models\Reservation;
+use App\Services\ReservationService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
-    
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
-        
-        $reservations = $request->user()->reservations()->with('book')->get();
-        return response()->json($reservations);
+        return response()->json(
+            $request->user()
+                ->reservations()
+                ->with('book')
+                ->latest()
+                ->get()
+        );
     }
 
-    
-    public function store(Request $request)
-    {
-        $request->validate([
-            'book_id' => 'required|exists:books,id'
+    public function store(
+        Request $request,
+        ReservationService $service
+    ): JsonResponse {
+        $data = $request->validate([
+            'book_id' => [
+                'required',
+                'integer',
+                'exists:books,id',
+            ],
         ]);
 
-        $book = Book::findOrFail($request->book_id);
+        $reservation = $service->reserve(
+            $request->user(),
+            (int) $data['book_id']
+        );
 
-        
-        if ($book->stock <= 0) {
-            return response()->json(['message' => 'Ce livre est malheureusement en rupture de stock.'], 400);
+        if ($reservation === null) {
+            return response()->json([
+                'message' => 'This book is out of stock.',
+            ], 409);
         }
 
-       
-        $book->decrement('stock');
-
-        
-        $reservation = Reservation::create([
-            'user_id' => $request->user()->id,
-            'book_id' => $book->id,
-            'status' => 'pending' 
-        ]);
-
         return response()->json([
-            'message' => 'Livre réservé avec succès !',
-            'reservation' => $reservation
+            'message' => 'Reservation confirmed. Pay when collecting your book within seven days.',
+            'reservation' => $reservation,
         ], 201);
     }
 }
