@@ -1552,6 +1552,117 @@ button:disabled {
     }
 }
 
+
+/* ==========================================
+   READABILITY — NAVIGATION COUNTERS
+   ========================================== */
+
+.nav-tab .badge-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 26px;
+    min-height: 26px;
+    padding: 3px 8px;
+    margin-left: 8px;
+
+    color: #ffffff;
+    background: #21100d;
+
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+
+    font-size: 0.82rem;
+    font-weight: 800;
+    line-height: 1;
+
+    font-variant-numeric: tabular-nums;
+    text-shadow: none;
+}
+
+.nav-tab:hover .badge-count,
+.nav-tab.active .badge-count {
+    color: #ffffff;
+    background: #21100d;
+    border-color: #fff0c5;
+}
+
+
+/* ==========================================
+   READABILITY — TEXT AND BUTTONS
+   ========================================== */
+
+
+.header-kicker {
+    color: #ff9a9a;
+}
+
+
+#search-input::placeholder {
+    color: #d0c09d;
+    opacity: 1;
+}
+
+
+.input-group input::placeholder {
+    color: #c8b89a;
+    opacity: 1;
+}
+
+
+.book-isbn-badge {
+    font-size: 0.84rem;
+    color: #d9c9a7;
+}
+
+.trope-tag {
+    font-size: 0.78rem;
+}
+
+.stock-badge {
+    font-size: 0.84rem;
+}
+
+
+.card-btn:disabled,
+.pill-btn:disabled {
+    opacity: 0.7;
+}
+
+
+.reservation-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+
+.cancel-reservation-btn {
+    background: #651b24;
+    color: #ffffff;
+    border: 1px solid #e79b9b;
+}
+
+.cancel-reservation-btn:hover:not(:disabled) {
+    background: #872c37;
+    color: #ffffff;
+}
+
+
+@media (max-width: 640px) {
+    .reservation-actions {
+        width: 100%;
+        align-items: stretch;
+    }
+
+    .reservation-actions .pill-btn {
+        width: 100%;
+    }
+}
+
+
 @media (prefers-reduced-motion: reduce) {
 
     *,
