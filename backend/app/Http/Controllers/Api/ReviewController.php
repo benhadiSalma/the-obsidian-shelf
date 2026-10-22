@@ -38,9 +38,12 @@ class ReviewController extends Controller
         $user = $request->user();
 
         // Check if the user has reserved this book.
+
         $hasReserved = $user->reservations()
             ->where('book_id', $book->id)
+            ->whereIn('status', ['confirmed', 'collected'])
             ->exists();
+
 
         if (!$hasReserved) {
             return response()->json([

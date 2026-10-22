@@ -33,7 +33,7 @@ const Store = {
     activeFilter: 'all',
     selectedBook: null,
 
-    
+
     hasReserved(bookId) {
         return this.reservations.some(
             reservation =>
@@ -601,9 +601,7 @@ const ArchiveUI = {
     async handleCancellation(reservationId) {
 
         const reservation = Store.reservations.find(
-            item =>
-                Number(item.book_id) === Number(book.id) &&
-                item.status === 'confirmed'
+            item => Number(item.id) === Number(reservationId)
         );
 
 
@@ -786,7 +784,9 @@ const ArchiveUI = {
         reserveButton.onclick = () => this.handleReservation(book.id);
 
         const reservation = Store.reservations.find(
-            item => Number(item.book_id) === Number(book.id)
+            item =>
+                Number(item.book_id) === Number(book.id) &&
+                item.status === 'confirmed'
         );
 
         const confirmation = document.getElementById(
