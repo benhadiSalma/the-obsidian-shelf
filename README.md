@@ -1,4 +1,4 @@
-The Obsidian Shelf
+# The Obsidian Shelf
 
 > **Een fictieve romantasy-boekhandel met een eigen REST API en een interactieve website.**  
 > Project voor *Application Architecture*.
