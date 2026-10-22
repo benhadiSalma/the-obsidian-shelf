@@ -1,4 +1,3 @@
-
 /**
  * The Obsidian Shelf
  * 
@@ -38,7 +37,7 @@ const Store = {
         return this.reservations.some(
             reservation =>
                 Number(reservation.book_id) === Number(bookId) &&
-                reservation.status !== 'cancelled'
+                ['confirmed', 'collected'].includes(reservation.status)
         );
     },
 
@@ -593,9 +592,6 @@ const ArchiveUI = {
         }
     },
 
-    // WISHLIST
-
-
     // CANCEL RESERVATION
 
     async handleCancellation(reservationId) {
@@ -680,6 +676,7 @@ const ArchiveUI = {
                 this.renderBookDetail(Store.selectedBook);
             }
 
+            this.updateCounters();
             this.renderCatalog();
 
             this.showToast(
@@ -694,6 +691,7 @@ const ArchiveUI = {
     },
 
 
+    // WISHLIST
 
     async handleWishlist(bookId) {
         if (!this.requireLogin('Log in to use your wishlist.')) {
@@ -934,8 +932,6 @@ const ArchiveUI = {
         const avatar = document.getElementById('profile-avatar-letter');
         const form = document.getElementById('profile-form');
         const list = document.getElementById('profile-purchases-list');
-        const element = document.createElement('article');
-
         if (!Store.user || !Store.token) {
             name.textContent = 'Wandering Visitor';
 
@@ -1328,7 +1324,9 @@ const ArchiveUI = {
             Store.wishlistIds.length;
 
         document.getElementById('purchases-count').textContent =
-            Store.reservations.length;
+            Store.reservations.filter(
+                reservation => ['confirmed', 'collected'].includes(reservation.status)
+            ).length;
     },
 
     // MODALS

@@ -50,7 +50,7 @@ class BookController extends Controller
     public function show(Book $book): JsonResponse
     {
         $book->load([
-            'reviews.user',
+            'reviews.user:id,name,username',
         ]);
 
         return response()->json($book);

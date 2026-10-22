@@ -156,18 +156,75 @@ Laat dit terminalvenster open.
 
 ### Stap 3 — Frontend starten
 
-Open een **tweede CMD-terminal** in de hoofdmap `the-obsidian-shelf/` en voer uit:
+De frontend en backend zijn twee afzonderlijke applicaties. Om alle functionaliteiten te gebruiken, moet de Laravel-backend actief zijn.
+
+**Eerst de backend starten**
+
+Open een terminal in de map `backend/`:
+
+```cmd
+php artisan serve --host=127.0.0.1 --port=8000
+```
+
+Laat deze terminal open.
+
+Controleer of de API werkt via:
+
+http://127.0.0.1:8000/api/books
+
+Als de boeken als JSON worden weergegeven, werkt de verbinding met de backend.
+
+#### Optie 1 — Via Live Server (aanbevolen)
+
+1. Open het project in Visual Studio Code.
+2. Installeer indien nodig de extensie **Live Server** van Ritwick Dey.
+3. Open `frontend/index.html`.
+4. Klik met de rechtermuisknop en kies **Open with Live Server**.
+5. De website opent automatisch in de browser, meestal op poort 5500.
+
+#### Optie 2 — Via de ingebouwde PHP-server
+
+Als alternatief kan de frontend zonder VS Code-extensie gestart worden.
+
+Open een tweede terminal in de **hoofdmap van het project** en voer uit:
 
 ```cmd
 php -S 127.0.0.1:5500 -t frontend
 ```
 
-**Open de website:** <http://127.0.0.1:5500>
+Open daarna:
 
-In `frontend/config.js` staat de lokale API-URL:
+http://127.0.0.1:5500/
+
+Let op: voer deze opdracht uit vanuit `the-obsidian-shelf/` en niet vanuit `backend/`.
+
+#### Mogelijke problemen oplossen
+
+**De boeken of reviews worden niet geladen**
+
+Controleer of Laravel nog actief is op poort 8000 en of http://127.0.0.1:8000/api/books bereikbaar is.
+
+De API-configuratie staat in `frontend/config.js`:
 
 ```javascript
 window.OBSIDIAN_API_BASE_URL = 'http://127.0.0.1:8000/api';
+```
+
+**De pagina wordt voortdurend vernieuwd met Live Server**
+
+Controleer of Live Server automatisch wijzigingen in bestanden detecteert. Stop Live Server en probeer eventueel optie 2 met de ingebouwde PHP-server.
+
+**De CSS of afbeeldingen worden niet geladen**
+
+Controleer of je de correcte frontend-URL gebruikt en of `frontend/style.css` aanwezig is. Vernieuw de pagina met `Ctrl + F5`.
+
+Bij optie 2 moet de website geopend worden via `http://127.0.0.1:5500/`.
+
+**Poort 5500 is al in gebruik**
+
+Stop eerst Live Server of de andere frontendserver voordat je dezelfde poort opnieuw gebruikt.
+
+**Belangrijk:** beide methoden zijn bedoeld om het project lokaal uit te voeren. Voor een publieke deployment moeten geschikte webservers worden gebruikt. Zie de aparte sectie *Deployment*.
 ```
 
 ### Optioneel — Demonstratiereviews

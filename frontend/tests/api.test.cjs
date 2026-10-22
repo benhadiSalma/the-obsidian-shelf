@@ -1,4 +1,3 @@
-
 'use strict';
 
 const test = require('node:test');
@@ -24,15 +23,21 @@ function response(data, status = 200) {
 
 function setup(fakeFetch, token = null) {
     const events = [];
+    const elements = new Map();
 
     const context = vm.createContext({
         window: {
             OBSIDIAN_API_BASE_URL:
-                'http://127.0.0.1:8000/api'
+                'http://127.0.0.1:8000/api',
+            confirm: () => true
         },
 
         document: {
-            addEventListener: name => events.push(name)
+            addEventListener: name => events.push(name),
+            getElementById(id) {
+                if (!elements.has(id)) elements.set(id, { textContent: '' });
+                return elements.get(id);
+            }
         },
 
         localStorage: {
@@ -51,6 +56,8 @@ function setup(fakeFetch, token = null) {
     return {
         dao: vm.runInContext('BookstoreDAO', context),
         store: vm.runInContext('Store', context),
+        ui: vm.runInContext('ArchiveUI', context),
+        elements,
         events
     };
 }
@@ -319,3 +326,90 @@ test('le JavaScript ne référence aucun ID HTML inexistant', () => {
 
     assert.deepEqual(missing, []);
 });
+
+
+// TEST 9 - Cancellation sends DELETE and Bearer token
+
+test('annuler une réservation appelle la bonne route DELETE avec le token', async () => {
+    let call;
+
+    const { dao } = setup(async (url, options) => {
+        call = { url, options };
+        return response({ success: true, reservation: { id: 42, status: 'cancelled' } });
+    }, 'demo-token');
+
+    const result = await dao.cancelReservation(42);
+
+    assert.equal(call.url, 'http://127.0.0.1:8000/api/reservations/42');
+    assert.equal(call.options.method, 'DELETE');
+    assert.equal(call.options.headers.Authorization, 'Bearer demo-token');
+    assert.equal(result.reservation.status, 'cancelled');
+});
+
+// TEST 10 - Cancelled reservations cannot unlock reviews
+
+test('une réservation annulée ne débloque pas les avis', () => {
+    const { store } = setup(async () => response({}));
+    store.reservations = [{ book_id: 7, status: 'cancelled' }];
+    assert.equal(store.hasReserved(7), false);
+
+    store.reservations.push({ book_id: 7, status: 'confirmed' });
+    assert.equal(store.hasReserved(7), true);
+});
+
+// TEST 11 - Actual cancellation updates the state and counters
+
+test('une annulation réussie met à jour stock, statut et compteurs', async () => {
+    const { store, ui } = setup(async () => response({
+        success: true,
+        reservation: {
+            id: 15,
+            book_id: 7,
+            status: 'cancelled',
+            book: { id: 7, stock: 4 }
+        }
+    }), 'demo-token');
+
+    store.books = [{ id: 7, stock: 3 }];
+    store.reservations = [{
+        id: 15,
+        book_id: 7,
+        status: 'confirmed',
+        created_at: new Date().toISOString()
+    }];
+
+    const effects = [];
+    ui.renderProfile = () => effects.push('profile');
+    ui.renderCatalog = () => effects.push('catalog');
+    ui.updateCounters = () => effects.push('counters');
+    ui.showToast = message => effects.push(message);
+    ui.handleError = error => { throw error; };
+
+    await ui.handleCancellation(15);
+
+    assert.equal(store.reservations[0].status, 'cancelled');
+    assert.equal(store.books[0].stock, 4);
+    assert.equal(store.hasReserved(7), false);
+    assert.ok(effects.includes('counters'));
+    assert.ok(effects.includes('catalog'));
+    assert.ok(effects.includes('profile'));
+});
+
+
+// TEST 12 - Counts active reservations only
+
+test('le compteur Purchases ignore les réservations annulées', () => {
+    const { store, ui, elements } = setup(async () => response({}));
+    store.wishlistIds = [1, 2];
+    store.reservations = [
+        { id: 1, status: 'confirmed' },
+        { id: 2, status: 'cancelled' },
+        { id: 3, status: 'collected' }
+    ];
+
+    ui.updateCounters();
+
+    assert.equal(elements.get('wishlist-count').textContent, 2);
+    assert.equal(elements.get('purchases-count').textContent, 2);
+});
+

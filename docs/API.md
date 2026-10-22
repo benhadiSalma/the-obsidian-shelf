@@ -104,6 +104,8 @@ Retourneert één boek inclusief `reviews` en de bijbehorende gebruikersinformat
 
 **Response:** `200 OK`. Een onbekend boek geeft `404 Not Found`.
 
+**Privacy:** in `reviews[*].user` worden alleen `id`, `name` en `username` teruggestuurd. E-mailadressen en andere privéprofielvelden worden niet publiek gemaakt.
+
 ---
 
 ## Accounts en profiel
@@ -306,7 +308,7 @@ Geeft de wishlist-items van de ingelogde gebruiker terug, inclusief de gerelatee
 | Al een review geschreven | `409 Conflict` |
 | Ongeldige score of tekst | `422 Unprocessable Entity` |
 
-> **Controle vóór indiening:** in de code-export controleert `ReviewController` nog niet de reserveringsstatus. Voeg de controle voor `confirmed`/`collected` toe voordat je documenteert dat een geannuleerde reservering geen recht op review geeft. Zie [Testing](TESTING.md).
+> **Implementatie:** `ReviewController` aanvaardt uitsluitend een reservering met status `confirmed` of `collected`. Een geannuleerde reservering geeft geen reviewrecht. Zie [Testing](TESTING.md).
 
 ---
 
@@ -348,5 +350,3 @@ curl -H "Accept: application/json" \
 **Verder lezen:** [README](../README.md) · [Architectuur](ARCHITECTURE.md) · [Planning](PLANNING.md) · [Testplan](TESTING.md)
 
 **Bronnen en AI-verantwoording:** zie [Bronnen en AI-gebruik in de README](../README.md#bronnen-en-ai-gebruik), inclusief het eerdere eigen designproject [The Silken Manuscript](https://github.com/benhadiSalma/The-Silken-Manuscript).
-
-

@@ -213,8 +213,9 @@ Als er iets fout gaat, kan de transactie teruggedraaid worden. Zo vermijdt de ap
 - **Stockcontrole:** voorkomt reserveringen met negatieve voorraad.
 - **Transacties:** houden reserveringen en stock synchroon.
 - **Statuscontrole:** voorkomt dat dezelfde annulering de stock meerdere keren verhoogt.
+- **Publieke reviewprivacy:** de boekdetail-API laadt van de reviewer alleen `id`, `name` en `username`, niet het e-mailadres.
 
-> Nog controleren voor de indiening: `ReviewController` moet geannuleerde reserveringen uitsluiten bij het recht om te reviewen. Dit staat ook in [TESTING.md](TESTING.md).
+> **Huidige implementatie:** `ReviewController` aanvaardt voor reviews enkel reserveringen met status `confirmed` of `collected`. Een `cancelled`-reservering verleent dus geen reviewrecht (zie de annuleringstests in [TESTING.md](TESTING.md)).
 
 ---
 
