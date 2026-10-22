@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
+    /**
+     * List the authenticated user's reservations.
+     */
     public function index(Request $request): JsonResponse
     {
         return response()->json(
@@ -20,6 +23,9 @@ class ReservationController extends Controller
         );
     }
 
+    /**
+     * Create a new reservation.
+     */
     public function store(
         Request $request,
         ReservationService $service
@@ -47,5 +53,24 @@ class ReservationController extends Controller
             'message' => 'Reservation confirmed. Pay when collecting your book within seven days.',
             'reservation' => $reservation,
         ], 201);
+    }
+
+    /**
+     * Cancel a reservation within 24 hours.
+     */
+    public function cancel(
+        Request $request,
+        ReservationService $service,
+        int $reservation
+    ): JsonResponse {
+        $result = $service->cancel(
+            $request->user(),
+            $reservation
+        );
+
+        return response()->json(
+            $result,
+            $result['success'] ? 200 : 409
+        );
     }
 }

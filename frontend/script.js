@@ -33,11 +33,15 @@ const Store = {
     activeFilter: 'all',
     selectedBook: null,
 
+    
     hasReserved(bookId) {
         return this.reservations.some(
-            reservation => Number(reservation.book_id) === Number(bookId)
+            reservation =>
+                Number(reservation.book_id) === Number(bookId) &&
+                reservation.status !== 'cancelled'
         );
     },
+
 
     pickupDate(reservation) {
         const startingDate = reservation.pickup_until || reservation.created_at;
@@ -179,6 +183,14 @@ const BookstoreDAO = {
             method: 'POST',
             body: { book_id: bookId }
         }),
+
+
+    cancelReservation: reservationId =>
+        BookstoreDAO.request(`/reservations/${reservationId}`, {
+            method: 'DELETE'
+        }),
+
+
 
     getWishlist: () =>
         BookstoreDAO.request('/wishlist'),
@@ -583,6 +595,108 @@ const ArchiveUI = {
 
     // WISHLIST
 
+
+    // CANCEL RESERVATION
+
+    async handleCancellation(reservationId) {
+
+        const reservation = Store.reservations.find(
+            item =>
+                Number(item.book_id) === Number(book.id) &&
+                item.status === 'confirmed'
+        );
+
+
+        if (!reservation || reservation.status !== 'confirmed') {
+            return;
+        }
+
+        const key = `cancel-${reservationId}`;
+
+        if (this.busy.has(key)) {
+            return;
+        }
+
+        const createdAt = new Date(reservation.created_at).getTime();
+
+        if (
+            !Number.isFinite(createdAt) ||
+            Date.now() >= createdAt + 86400000
+        ) {
+            this.showToast(
+                'The 24-hour cancellation period has expired.'
+            );
+
+            this.renderProfile();
+            return;
+        }
+
+        const confirmed = window.confirm(
+            'Are you sure you want to cancel this reservation? The book will return to stock.'
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        this.busy.add(key);
+
+        try {
+            const result = await BookstoreDAO.cancelReservation(
+                reservationId
+            );
+
+            if (!result.success) {
+                throw new Error(
+                    result.message || 'Cancellation refused.'
+                );
+            }
+
+            Object.assign(
+                reservation,
+                result.reservation || { status: 'cancelled' }
+            );
+
+            const book = Store.books.find(
+                item => Number(item.id) === Number(reservation.book_id)
+            );
+
+            if (book) {
+                book.stock = Number(
+                    result.reservation?.book?.stock ??
+                    (Number(book.stock) + 1)
+                );
+            }
+
+            if (
+                Number(Store.selectedBook?.id) ===
+                Number(reservation.book_id)
+            ) {
+                Store.selectedBook = {
+                    ...Store.selectedBook,
+                    stock: book
+                        ? book.stock
+                        : Store.selectedBook.stock
+                };
+
+                this.renderBookDetail(Store.selectedBook);
+            }
+
+            this.renderCatalog();
+
+            this.showToast(
+                'Reservation cancelled. The book is back in stock.'
+            );
+        } catch (error) {
+            this.handleError(error, 'Cancellation failed.');
+        } finally {
+            this.busy.delete(key);
+            this.renderProfile();
+        }
+    },
+
+
+
     async handleWishlist(bookId) {
         if (!this.requireLogin('Log in to use your wishlist.')) {
             return;
@@ -820,6 +934,7 @@ const ArchiveUI = {
         const avatar = document.getElementById('profile-avatar-letter');
         const form = document.getElementById('profile-form');
         const list = document.getElementById('profile-purchases-list');
+        const element = document.createElement('article');
 
         if (!Store.user || !Store.token) {
             name.textContent = 'Wandering Visitor';
@@ -864,40 +979,83 @@ const ArchiveUI = {
 
             if (!book) return;
 
+
             const element = document.createElement('article');
             element.className = 'purchase-item';
+
+            const createdAt = new Date(
+                reservation.created_at
+            ).getTime();
+
+            const canCancel =
+                reservation.status === 'confirmed' &&
+                Number.isFinite(createdAt) &&
+                Date.now() < createdAt + 86400000;
+
+            const status = reservation.status === 'cancelled'
+                ? '✕ Reservation cancelled'
+                : reservation.status === 'confirmed'
+                    ? `✓ Ready for pickup · Pay by ${Store.pickupDate(reservation)}`
+                    : reservation.status === 'collected'
+                        ? '✓ Collected'
+                        : `Status: ${reservation.status}`;
 
             element.innerHTML = `
                 <div class="purchase-info">
                     <h4>${this.escapeHtml(book.title)}</h4>
 
                     <p class="purchase-meta">
-                        <strong>Author:</strong> ${this.escapeHtml(book.author)}
-                        · <strong>ISBN:</strong> ${this.escapeHtml(book.isbn)}
+                        <strong>Author:</strong>
+                        ${this.escapeHtml(book.author)}
+
+                        · <strong>ISBN:</strong>
+                        ${this.escapeHtml(book.isbn)}
+
                         · <strong>Reserved price:</strong>
                         ${euro.format(
-                            Number(reservation.price_at_reservation ?? book.price)
-                        )}
+                Number(reservation.price_at_reservation ?? book.price)
+            )}
                     </p>
 
                     <span class="pickup-tag">
-                        ✓ Ready for pickup · Pay by
-                        ${this.escapeHtml(Store.pickupDate(reservation))}
+                        ${this.escapeHtml(status)}
                     </span>
                 </div>
 
-                <button class="pill-btn" type="button">
-                    ✒️ Details &amp; Review
-                </button>
+                <div class="reservation-actions">
+                    <button
+                        class="pill-btn reservation-details-btn"
+                        type="button"
+                    >
+                        ✒️ Details &amp; Review
+                    </button>
+
+                    ${canCancel ? `
+                        <button
+                            class="pill-btn cancel-reservation-btn"
+                            type="button"
+                        >
+                            ✕ Cancel Reservation (24h)
+                        </button>
+                    ` : ''}
+                </div>
             `;
 
-            element.querySelector('button').addEventListener(
-                'click',
-                () => this.openBookDetail(book.id)
-            );
+            element
+                .querySelector('.reservation-details-btn')
+                .addEventListener('click', () => {
+                    this.openBookDetail(book.id);
+                });
+
+            element
+                .querySelector('.cancel-reservation-btn')
+                ?.addEventListener('click', () => {
+                    this.handleCancellation(reservation.id);
+                });
 
             list.appendChild(element);
-        });
+        }
+        );
     },
 
     bindProfileForm() {
