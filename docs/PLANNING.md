@@ -147,12 +147,12 @@ Dit overzicht documenteert het werkelijke ontwikkelingsverloop achteraf en wordt
 
 ## 4. Resterend werk — prioriteiten voor de indiening
 
-1[x]. **Repository opruimen:** tijdelijk back-upbestand `frontend/script-casse-backup.js` verwijderen als het nog aanwezig is.
-2[x]. **Documentatie finaliseren:** README, PLANNING en TESTING op dezelfde laatste resultaten controleren.
-3[x]. **GitHub:** `git status` controleren, de wijzigingen committen en pushen.
-4[x]. **Indiening:** publieke GitHub-link en inhoud van de repository controleren.
+- [x] Repository opruimen en tijdelijke back-upbestanden verwijderen.
+- [x] README, PLANNING en TESTING finaliseren.
+- [x] Wijzigingen committen en pushen naar GitHub.
+- [x] Publieke repository en indieningslink controleren.
 
-**Definitieve indieningsdatum:** 28/10/2026.
+**Definitieve indieningsdatum:** 28 oktober 2026 om 23:59.
 
 ---
 
@@ -179,7 +179,7 @@ Dit overzicht documenteert het werkelijke ontwikkelingsverloop achteraf en wordt
 | Gebruikte technologieën | PHP, Laravel, SQLite, Sanctum, HTML, CSS, JavaScript |
 | Versiebeheer | Git en GitHub |
 | Repository | [The Obsidian Shelf](https://github.com/benhadiSalma/the-obsidian-shelf) |
-| Definitieve indieningsdatum | Nog niet bevestigd |
+| Definitieve indieningsdatum | 28 oktober 2026 om 23:59 |
 
 ### Belangrijke Git-activiteit
 

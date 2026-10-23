@@ -295,9 +295,7 @@ The Obsidian Shelf is voor deze opdracht uitgewerkt als een **afzonderlijke fron
 
 **[ChatGPT — OpenAI](https://chatgpt.com/)**
 
-ChatGPT werd gebruikt als hulpmiddel bij:
-
-   ChatGPT werd gebruikt bij het analyseren van de opdracht, het genereren en aanpassen van delen van de PHP-, Laravel- en JavaScript-code, het oplossen van programmeerfouten, het opstellen van testscenario's en het schrijven en verbeteren van projectdocumentatie.
+ChatGPT werd gebruikt bij het analyseren van de opdracht, het genereren en aanpassen van delen van de PHP-, Laravel- en JavaScript-code, het oplossen van programmeerfouten, het opstellen van testscenario's en het schrijven en verbeteren van projectdocumentatie.
    
 ### Technische referenties
 
