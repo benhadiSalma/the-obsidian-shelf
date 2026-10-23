@@ -1,58 +1,57 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Backend — The Obsidian Shelf
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> Laravel REST API voor de fictieve romantasy-boekwinkel.  
+> De volledige projectdocumentatie staat in de [hoofd-README](../README.md).
 
-## About Laravel
+## Overzicht
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Laravel 13 / PHP 8.3+** met SQLite en Sanctum.
+- `routes/api.php` bevat de publieke en beveiligde API-routes.
+- `app/Http/Controllers/Api/` bevat de controllers voor boeken, accounts, reviews, wishlist en reserveringen.
+- `app/Services/ReservationService.php` houdt reservering en stockwijziging samen in databasetransacties.
+- `app/Models/` bevat de Eloquent-modellen en relaties.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Lokaal installeren (Windows CMD)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Vanuit `backend/`:
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```cmd
+composer install
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Als `.env` nog niet bestaat (enkel bij een eerste installatie):
 
-## Contributing
+```cmd
+copy .env.example .env
+php artisan key:generate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Configureer `DB_CONNECTION=sqlite` en maak indien nodig het bestand `database/database.sqlite` aan. Daarna:
 
-## Code of Conduct
+```cmd
+php artisan migrate
+php artisan db:seed
+php artisan serve --host=127.0.0.1 --port=8000
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**Test de API:** <http://127.0.0.1:8000/api/books>
 
-## Security Vulnerabilities
+Gebruik `migrate:fresh` niet op een bestaande database: dit verwijdert alle gegevens.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Tests
 
-## License
+```cmd
+php artisan test
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Bevestigd op 23/10/2026:** 21 Laravel-tests geslaagd, 103 assertions. De afzonderlijke privacytest slaagde met 7 assertions en maakt deel uit van deze 21 tests. Zie [TESTING.md](../docs/TESTING.md).
+
+## Documentatie
+
+- [API-endpoints](../docs/API.md)
+- [Architectuur en design patterns](../docs/ARCHITECTURE.md)
+- [Testscenario's en resultaten](../docs/TESTING.md)
+- [Projectplanning](../docs/PLANNING.md)
+- [Installatie, deployment, bronnen en AI-verantwoording](../README.md)
+
+**Veiligheid:** commit nooit `.env`, tokens, lokale productiegegevens of vertrouwelijke gebruikersinformatie.

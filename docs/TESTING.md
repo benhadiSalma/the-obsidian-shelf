@@ -1,178 +1,264 @@
 # TESTING — The Obsidian Shelf
 
-> Verslag van geautomatiseerde tests en geplande manuele controles.  
-> Laatste vastgelegde terminalresultaten: **22 oktober 2026**.
+> Testverslag voor **Application Architecture**.  
+> Laatste update: **23 oktober 2026**.
 
 [← README](../README.md) · [API](API.md) · [Architectuur](ARCHITECTURE.md) · [Planning](PLANNING.md)
 
 ---
 
-## 1. Teststrategie
+## 1. Doel en teststrategie
 
-We testen de **bedrijfsregels** op de backend, de **HTTP-communicatie** op de frontend en de **volledige gebruikersflow** manueel in de browser. Testdata voor Laravel draait met `RefreshDatabase` en SQLite `:memory:`: de gewone lokale boekendatabase wordt niet gewist.
+The Obsidian Shelf is opgebouwd uit een **Laravel REST API** (backend) en een **HTML/CSS/JavaScript-frontend**. De tests controleren of de belangrijkste functionaliteiten, toegangsrechten en bedrijfsregels correct werken.
 
-### Wat wordt getest?
+De testaanpak bestaat uit:
 
-- Succesgevallen, foutieve invoer en HTTP-statuscodes.
-- Rechten van ingelogde en niet-ingelogde gebruikers.
-- Verandering van boekvoorraad bij reserveren en annuleren.
-- Grensgevallen rond de annuleringstermijn van 24 uur.
-- Weigering van dubbele reviews en annuleringen.
-- Communicatie met de REST API via `BookstoreDAO`.
-- Bescherming van persoonlijke gegevens bij publieke boekreviews.
+- **Backend feature tests:** HTTP-responses, validatie, authenticatie, databasewijzigingen en grensgevallen.
+- **Frontendtests:** gedrag van `BookstoreDAO`, API-verzoeken, verwerking van fouten en bijwerken van de interface.
+- **Manuele browsertests:** de volledige gebruikersflow in de echte website met een draaiende Laravel-server.
+
+De Laravel-tests gebruiken `RefreshDatabase` met **SQLite `:memory:`**. Daardoor wordt de gewone lokale database met demonstratieboeken niet gewist.
 
 ---
 
-## 2. Bevestigde resultaten (terminal op Windows)
+## 2. Bevestigde automatische testresultaten
 
-Op **22 oktober 2026** zijn de volgende resultaten daadwerkelijk behaald en getoond:
+**Uitgevoerd op 23 oktober 2026 in Windows CMD.** De onderstaande resultaten zijn bevestigd met terminaluitvoer.
 
-```text
-php artisan test
-Tests: 20 passed (96 assertions)
+| Controle | Resultaat |
+| --- | --- |
+| Laravel: `php artisan test` | **21 geslaagd, 103 assertions** |
+| Privacytest afzonderlijk | **1 geslaagd, 7 assertions** |
+| Frontend: `node --test frontend\tests\api.test.cjs` | **12 geslaagd, 0 mislukt** |
+| JavaScript-syntax: `node --check frontend\script.js` | **Geen syntaxfouten** |
 
-node --test frontend\tests\api.test.cjs
-Tests: 8 passed, 0 failed
-```
+### Volledige Laravel-testsuite
 
-Daarnaast is de afzonderlijke annulatiesuite uitgevoerd:
-
-```text
-php artisan test --filter=ReservationCancellationTest
-Tests: 8 passed (31 assertions)
-```
-
-**Let op:** de **8 annuleringstests maken deel uit van de 20 backendtests**. Ze mogen dus niet opnieuw worden opgeteld. De 96 assertions omvatten eveneens deze tests.
-
-### Nieuwe correcties — opnieuw controleren
-
-Na deze resultaten zijn **extra tests** voorbereid voor reviewprivacy en de frontend-annulering:
-
-- `backend/tests/Feature/BookReviewPrivacyTest.php`: publieke boekdetails mogen geen e-mailadressen van reviewers uitlekken.
-- `frontend/tests/api.test.cjs`: controle van de DELETE-route, de rechten na annulering en de synchronisatie van status, stock en teller.
-
-De gewijzigde JavaScript-suite is gecontroleerd op de aangeleverde code: **12/12 tests geslaagd**. De extra Laravel-privacytest is op syntax gecontroleerd, maar moet op de Windows-installatie opnieuw worden uitgevoerd. Er wordt hier **geen nieuw totaal** voor PHP als geslaagd geclaimd.
-
----
-
-## 3. Backend — testscenario's
-
-**Bestand:** `backend/tests/Feature/BookstoreApiTest.php` — 10 tests.
-
-- **BE-01 Registratie:** username verplicht en valide registratie lukt.
-- **BE-02 Catalogus:** zoeken op ISBN en filteren op stock.
-- **BE-03 Gast:** niet-ingelogde gebruikers kunnen niet reserveren (`401`).
-- **BE-04 Reserveren:** stock `-1`, status `confirmed`, juiste afhaalgegevens.
-- **BE-05 Geen stock:** weigering (`409`), stock wordt nooit negatief.
-- **BE-06 Prijs:** reserveringsprijs verandert niet als catalogusprijs wijzigt.
-- **BE-07 Reviews:** reservering verplicht, maximaal één review per boek/gebruiker.
-- **BE-08 Reviewvalidatie:** score buiten 1–5 wordt geweigerd.
-- **BE-09 Profiel:** wijzigingen worden opgeslagen; unieke username.
-- **BE-10 Wishlist:** gebruikers zien alleen hun eigen wishlist.
-
-**Bestand:** `backend/tests/Feature/ReservationCancellationTest.php` — 8 tests.
-
-- **CAN-01 Binnen 24 uur:** status `cancelled` en stock `+1`.
-- **CAN-02 Na 23 uur 59 min.:** annuleren nog toegestaan.
-- **CAN-03 Precies na 24 uur:** weigering (`409`), stock blijft gelijk.
-- **CAN-04 Tweemaal annuleren:** tweede keer weigeren, geen dubbele stocktoename.
-- **CAN-05 Andere gebruiker:** weigering (`404`), geen wijziging.
-- **CAN-06 Gast:** weigering (`401`).
-- **CAN-07 Reeds afgehaald:** status `collected` kan niet worden geannuleerd.
-- **CAN-08 Review na annulering:** geweigerd (`403`).
-
-**Nieuw bestand:** `backend/tests/Feature/BookReviewPrivacyTest.php` — 1 extra test, nog te verifiëren in de eigen Laravel-omgeving.
-
-- **SEC-01 Openbaar boekdetail:** toont naam en username van de reviewer, maar **geen e-mailadres** of andere privévelden.
-
-**Technische voorbeeldtests:** in Laravel staan daarnaast de standaard `ExampleTest`-bestanden; zij verklaren het verschil tussen de functionele scenario's en het totaalaantal 20.
-
----
-
-## 4. Frontend — testscenario's
-
-**Bestand:** `frontend/tests/api.test.cjs`
-
-- **FE-01:** Initialisatie pas op `DOMContentLoaded`.
-- **FE-02:** Catalogus haalt ook meerdere pagina's op.
-- **FE-03:** Bearer-token bij beveiligde verzoeken.
-- **FE-04:** Registratie verstuurt JSON met POST.
-- **FE-05:** Reservering verstuurt het juiste `book_id`.
-- **FE-06:** Wishlist en reviews gebruiken de juiste Laravel-routes.
-- **FE-07:** Laravel-validatiefouten worden verwerkt.
-- **FE-08:** JavaScript verwijst niet naar ontbrekende HTML-element-ID's.
-- **FE-09 (nieuw):** Annulering verstuurt `DELETE` en Bearer-token.
-- **FE-10 (nieuw):** Een geannuleerde reservering geeft geen reviewrecht.
-- **FE-11 (nieuw):** Een succesvolle annulering past status, stock en teller aan.
-- **FE-12 (nieuw):** De teller Purchases telt enkel `confirmed` en `collected` en negeert `cancelled`.
-
-De frontendtests gebruiken **gesimuleerde API-responses**, geen echte Laravel-server. Daarom zijn manuele browsertests aanvullend nodig.
-
----
-
-## 5. Uitvoeren op Windows (CMD)
-
-Vanuit de hoofdmap `the-obsidian-shelf`:
+Vanuit `backend/`:
 
 ```cmd
-cd backend
 php artisan test
-cd ..
+```
+
+Bevestigde uitvoer:
+
+```text
+Tests: 21 passed (103 assertions)
+Duration: 6.81s
+```
+
+### Privacytest afzonderlijk
+
+Vanuit `backend/`:
+
+```cmd
+php artisan test --filter=BookReviewPrivacyTest
+```
+
+Bevestigde uitvoer:
+
+```text
+Tests: 1 passed (7 assertions)
+Duration: 5.47s
+```
+
+**Belangrijk:** deze privacytest maakt al deel uit van de 21 Laravel-tests en wordt dus niet dubbel geteld.
+
+### Frontendtests
+
+Vanuit de hoofdmap van het project:
+
+```cmd
 node --check frontend\script.js
 node --test frontend\tests\api.test.cjs
 ```
 
-Test de nieuwe privacyregel afzonderlijk:
+Bevestigde uitvoer:
+
+```text
+tests 12
+pass 12
+fail 0
+cancelled 0
+skipped 0
+```
+
+**Totaal: 33 geslaagde automatische tests** (21 backend en 12 frontend). De backend telt **103 assertions**. Er zijn geen mislukte tests gerapporteerd.
+
+---
+
+## 3. Backend: scenario's en grensgevallen
+
+### 3.1 `BookstoreApiTest.php` — 10 tests
+
+| ID | Scenario | Verwacht resultaat |
+| --- | --- | --- |
+| BE-01 | Registratie zonder username | Validatie weigert de aanvraag |
+| BE-02 | Catalogus zoeken op ISBN en filteren op voorraad | Correcte boeken worden teruggegeven |
+| BE-03 | Niet-ingelogde gebruiker reserveert een boek | Aanvraag geweigerd (`401`) |
+| BE-04 | Geldige reservering | Reservering aangemaakt, voorraad `-1`, afhaalgegevens bewaard |
+| BE-05 | Reserveren bij voorraad `0` | Weigering; voorraad kan niet negatief worden |
+| BE-06 | Catalogusprijs wijzigt na de reservering | `price_at_reservation` blijft onveranderd |
+| BE-07 | Review zonder reservering of dubbele review | Review wordt geweigerd |
+| BE-08 | Reviewscore buiten `1–5` | Validatiefout |
+| BE-09 | Profiel wijzigen of bestaande username kiezen | Geldige wijziging opgeslagen; dubbele username geweigerd |
+| BE-10 | Wishlist van verschillende gebruikers | Elke gebruiker ziet alleen zijn eigen wishlist |
+
+**Resultaat:** 10 tests geslaagd.
+
+### 3.2 `ReservationCancellationTest.php` — 8 tests
+
+| ID | Scenario | Verwacht resultaat |
+| --- | --- | --- |
+| CAN-01 | Geldige reservering annuleren | Status `cancelled`, voorraad `+1` |
+| CAN-02 | Annuleren na 23 uur en 59 minuten | Annulering toegestaan |
+| CAN-03 | Annuleren precies na 24 uur | Weigering (`409`); voorraad blijft gelijk |
+| CAN-04 | Tweemaal dezelfde reservering annuleren | Tweede annulering geweigerd; geen tweede voorraadverhoging |
+| CAN-05 | Een andere gebruiker probeert te annuleren | Weigering (`404`) |
+| CAN-06 | Niet-ingelogde gebruiker probeert te annuleren | Weigering (`401`) |
+| CAN-07 | Een reeds afgehaald boek annuleren | Weigering (`409`) |
+| CAN-08 | Review schrijven met alleen een geannuleerde reservering | Weigering (`403`) |
+
+**Resultaat:** 8 tests geslaagd. Bij de eerder afzonderlijk uitgevoerde annulatiesuite werden **31 assertions** bevestigd. Deze tests zijn inbegrepen in de volledige Laravel-testsuite.
+
+### 3.3 `BookReviewPrivacyTest.php` — 1 test
+
+**SEC-01 — Publieke reviewgegevens**
+
+Een bezoeker vraagt zonder login de detailgegevens van een boek met een review op via `GET /api/books/{book}`.
+
+Verwacht resultaat:
+
+- De review en de auteur zijn zichtbaar.
+- Alleen `id`, `name` en `username` van de auteur worden teruggegeven.
+- Het privé-e-mailadres van de auteur wordt **niet** opgenomen in de publieke JSON-response.
+
+**Resultaat:** 1 test geslaagd, **7 assertions**.
+
+### 3.4 Standaardtests — 2 tests
+
+De standaardbestanden `tests/Unit/ExampleTest.php` en `tests/Feature/ExampleTest.php` slagen eveneens. Zij controleren een eenvoudige basisvoorwaarde en een succesvolle HTTP-response; ze vervangen de functionele tests van het project niet.
+
+### Overzicht backend
+
+| Testbestand | Tests |
+| --- | ---: |
+| `BookstoreApiTest.php` | 10 |
+| `ReservationCancellationTest.php` | 8 |
+| `BookReviewPrivacyTest.php` | 1 |
+| Twee `ExampleTest.php`-bestanden | 2 |
+| **Totaal** | **21** |
+
+---
+
+## 4. Frontend: testscenario's
+
+**Bestand:** `frontend/tests/api.test.cjs`.
+
+| ID | Scenario | Verwacht resultaat |
+| --- | --- | --- |
+| FE-01 | Initialisatie | Start pas na `DOMContentLoaded` |
+| FE-02 | Catalogus met meerdere pagina's | Alle pagina's worden verwerkt |
+| FE-03 | Beveiligd API-verzoek | Correct Bearer-token in de header |
+| FE-04 | Registratie | JSON wordt via `POST` verstuurd |
+| FE-05 | Reservering | Correct `book_id`, geen paginareload |
+| FE-06 | Wishlist en reviews | Correcte Laravel-routes |
+| FE-07 | Laravel-validatiefouten | Foutmeldingen kunnen worden verwerkt |
+| FE-08 | HTML-ID's | Geen verwijzingen naar ontbrekende elementen |
+| FE-09 | Reservering annuleren | Correcte `DELETE`-route met token |
+| FE-10 | Reviewrecht na annulering | Annulering geeft geen reviewrecht |
+| FE-11 | Succesvolle annulering | Voorraad, status en tellers worden bijgewerkt |
+| FE-12 | Teller `Purchases` | Geannuleerde reserveringen worden niet meegeteld |
+
+**Resultaat:** 12 tests geslaagd, 0 mislukt.
+
+**Testbeperking:** deze tests gebruiken **gesimuleerde API-responses**. Ze controleren het JavaScript-gedrag, maar zijn geen automatische end-to-endtests met een echte Laravel-server en browser.
+
+---
+
+## 5. Manuele browsertests
+
+De volgende scenario's zijn door de student als **uitgevoerd en geslaagd** aangegeven. In tegenstelling tot de automatische tests is hiervan geen afzonderlijke terminaluitvoer beschikbaar.
+
+### Catalogus en boekdetails
+
+- [x] Boeken worden weergegeven met titel, auteur, prijs en voorraad.
+- [x] Zoeken en filteren werken.
+- [x] Boekdetails en bestaande reviews zijn zichtbaar.
+
+### Accounts en persoonlijke gegevens
+
+- [x] Registreren, aanmelden en afmelden werken.
+- [x] Het profiel kan worden aangepast.
+- [x] Een gebruiker kan zijn persoonlijke wishlist beheren.
+- [x] Persoonlijke gegevens en reserveringen zijn niet zichtbaar voor andere gebruikers.
+
+### Reserveringen en annuleringen
+
+- [x] Een reservering verlaagt de voorraad met één.
+- [x] De bevestiging toont de prijs en de afhaaltermijn.
+- [x] Een geldige reservering kan binnen 24 uur worden geannuleerd.
+- [x] Een succesvolle annulering wijzigt de status naar `cancelled` en herstelt de voorraad.
+- [x] De geannuleerde reservering blijft zichtbaar in het profiel.
+- [x] De teller `Purchases` telt geannuleerde reserveringen niet mee.
+
+### Reviews en weergave
+
+- [x] Een gebruiker met een geldige reservering kan een review plaatsen.
+- [x] Een gebruiker zonder geldige reservering kan geen review plaatsen.
+- [x] Publieke reviewgegevens bevatten geen privé-e-mailadres van de auteur.
+- [x] De interface, formulieren en knoppen zijn bruikbaar op desktop en op een kleiner scherm.
+
+---
+
+## 6. Tests opnieuw uitvoeren
+
+Open Windows CMD in de **hoofdmap** van `the-obsidian-shelf`:
 
 ```cmd
+node --check frontend\script.js
+node --test frontend\tests\api.test.cjs
 cd backend
+php artisan test
+```
+
+Voor alleen de privacytest, vanuit `backend/`:
+
+```cmd
 php artisan test --filter=BookReviewPrivacyTest
 ```
 
-Geen `migrate:fresh` uitvoeren op de bestaande lokale database.
+**Let op:** voer voor deze tests geen `php artisan migrate:fresh` uit op de bestaande lokale database. De testomgeving gebruikt haar eigen SQLite-database in het geheugen.
+
+De volledige opstartprocedure voor een manuele test staat in [README.md](../README.md#installatie-en-lokaal-uitvoeren).
 
 ---
 
-## 6. Manuele browsertests — nog af te vinken
+## 7. Risico's, dekking en beperkingen
 
-**Catalogus**
+| Risico | Afdekking |
+| --- | --- |
+| Negatieve of foutieve voorraad | Voorraadcontroles, transacties en reserveringstests |
+| Dubbele annulering | Statuscontrole en edge-casetest |
+| Annulering na de deadline | Test op de grens van exact 24 uur |
+| Onbevoegde toegang | Authenticatie- en eigenaarschapstests |
+| Ongeldige of dubbele review | Validatie en reserveringscontrole |
+| Lekken van persoonlijke gegevens | Privacytest voor publieke reviews |
+| Foutieve interface na annulering | Frontendtests voor voorraad, status en tellers |
 
-- [x] Homepage toont boeken met titel, auteur, prijs en actuele stock.
-- [x] Zoeken en filteren werken; details en reviews worden getoond.
-
-**Accounts**
-
-- [x] Registreren, aanmelden, profiel aanpassen en afmelden werken.
-- [x] Andere gebruikers kunnen geen privéreserveringen bekijken.
-
-**Reserveren en annuleren**
-
-- [x] Reserveren verlaagt de zichtbare stock met één.
-- [x] Afhaaltermijn en prijs worden correct bevestigd.
-- [x] Annuleerknop verschijnt uitsluitend bij een bevestigde reservering jonger dan 24 uur.
-- [x] Annuleren vraagt bevestiging en geeft stock éénmaal terug.
-- [x] De geannuleerde reservering blijft zichtbaar met de juiste status.
-- [x] De teller « Purchases » telt geannuleerde reserveringen niet mee.
-- [x] Na annulering vervalt het reviewrecht zonder andere geldige reservering.
-
-**Vormgeving en toegankelijkheid**
-
-- [x] De witte wishlist- en aankoopcijfers zijn leesbaar op elke actieve/inactieve tab.
-- [x] Modals, formulieren en knoppen werken op mobiel en desktop.
-- [x] Browserconsole en Network-tabblad tonen geen onverwachte fouten.
-
-> Niet afvinken zonder daadwerkelijk te testen. Noteer de testdatum en eventuele problemen na de controle.
+Niet alles is automatisch gedekt. Er zijn bijvoorbeeld geen afzonderlijke belastingstests of geautomatiseerde browsertests met een echt browserframework uitgevoerd. De twee Laravel-voorbeeldtests bieden bovendien weinig functionele dekking.
 
 ---
 
-## 7. Registratie van de laatste controle
+## 8. Eindconclusie
 
-- **Datum:** 22 oktober 2026.
-- **Backend (daadwerkelijk uitgevoerd):** 20 geslaagd, 96 assertions.
-- **Annulatiesuite (onderdeel van backend):** 8 geslaagd, 31 assertions.
-- **Frontend (daadwerkelijk op Windows):** 8 geslaagd.
-- **Extra frontendtests (gecontroleerd op aangeleverde code):** 12 geslaagd.
-- **Extra privacytest (Laravel):** syntax gecontroleerd; uitvoering op Windows nog te doen.
-- **Handmatige volledige browsercontrole:** nog niet gedocumenteerd.
+Op **23 oktober 2026** zijn de resultaten van de volledige automatische testsuite bevestigd:
 
-Bronnen en gebruikte AI-tools: [README — Bronnen en AI-gebruik](../README.md#bronnen-en-ai-gebruik).
+- **Backend:** 21/21 geslaagd, **103 assertions**.
+- **Frontend:** 12/12 geslaagd, **0 mislukt**.
+- **JavaScript-syntax:** geen fouten.
+- **Totaal:** **33 automatische tests geslaagd**.
+
+De tests controleren de belangrijkste bedrijfsregels, inclusief voorraadbeheer, toegangsrechten, reserveringen, annuleringen, reviews en de bescherming van privégegevens. De manuele controles vullen de automatische tests aan, maar vormen geen vervanging voor geautomatiseerde end-to-endtests.
+
+**Bronnen en AI-gebruik:** [README — Bronnen en AI-gebruik](../README.md#bronnen-en-ai-gebruik).

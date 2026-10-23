@@ -1,7 +1,7 @@
 # PLANNING — The Obsidian Shelf
 
 > Projectplanning en voortgang voor **Application Architecture**.  
-> Bijgewerkt op **22 oktober 2026**.
+> Bijgewerkt op **23 oktober 2026**.
 
 [← README](../README.md) · [Architectuur](ARCHITECTURE.md) · [Testing](TESTING.md)
 
@@ -76,12 +76,11 @@ De bezoeker kan boeken bekijken; na login kan een gebruiker reserveren, annulere
 
 - [x] 10 specifieke backend-API-tests toevoegen.
 - [x] 8 tests voor de annuleringsflow toevoegen en uitvoeren.
-- [x] Volledige PHP-testsuite uitvoeren: **20 tests, 96 assertions geslaagd** op 22 oktober 2026.
-- [x] 8 JavaScript-tests uitvoeren: **8 geslaagd** op 22 oktober 2026.
-- [x] Aanvullende frontendtests voor annulering voorbereiden.
-- [x] Bijgewerkte frontendtests opnieuw op mijn eigen computer uitvoeren.
-- [x] Nieuwe Laravel-test voor bescherming van reviewgegevens uitvoeren.
-- [x] Volledige browserflow handmatig controleren en resultaten registreren.
+- [x] Volledige PHP-testsuite uitvoeren: **21 tests, 103 assertions geslaagd** op 23 oktober 2026.
+- [x] Uitgebreide JavaScript-testsuite uitvoeren: **12 tests geslaagd, 0 mislukt** op 23 oktober 2026.
+- [x] Aanvullende frontendtests voor annulering en tellercontrole toevoegen.
+- [x] Nieuwe Laravel-privacytest uitvoeren: **1 test geslaagd, 7 assertions** (deel van de 21 backendtests).
+- [x] Manuele browsercontroles van de gebruikersflow uitvoeren (door student gerapporteerd).
 
 **Resultaat:** geautomatiseerde tests met testscenario's in `TESTING.md`.
 
@@ -94,10 +93,10 @@ De bezoeker kan boeken bekijken; na login kan een gebruiker reserveren, annulere
 - [x] Gebruikte bronnen en ChatGPT expliciet documenteren.
 - [x] Deploymentinstructies voorzien voor de gekozen technologie.
 - [x] Publieke GitHub-repository met `backend/` en `frontend/`.
-- [x] Laatste codecorrecties committen en pushen.
-- [x] Tijdelijk back-upbestand uit de Git-repository verwijderen.
+- [ ] Laatste documentatie- en codecorrecties controleren en pushen.
+- [ ] Controleren en verwijderen van tijdelijk back-upbestand `frontend/script-casse-backup.js` uit de Git-repository.
 - [x] Laatste handmatige tests uitvoeren.
-- [x] Documentatie na de laatste tests definitief bijwerken.
+- [ ] Finale documentatie (README, TESTING, PLANNING) controleren en committen.
 
 ---
 
@@ -122,10 +121,19 @@ Op 22 oktober 2026 heb ik verder gewerkt aan:
 - Het verbeteren en structureren van de projectdocumentatie.
 - Het voorbereiden van bijkomende kwaliteitsverbeteringen.
 
-**Bevestigde testresultaten op 22 oktober 2026:**
+**Eerder bevestigde testresultaten op 22 oktober 2026:**
 
 - Laravel: **20 geslaagde tests en 96 assertions**.
 - JavaScript: **8 geslaagde tests**.
+
+### 23 oktober 2026 — Finale tests en kwaliteitscontrole
+
+- `php artisan test`: **21 tests geslaagd, 103 assertions**.
+- `php artisan test --filter=BookReviewPrivacyTest`: **1 test geslaagd, 7 assertions** (onderdeel van de 21).
+- `node --test frontend\tests\api.test.cjs`: **12 tests geslaagd, 0 mislukt**.
+- `node --check frontend\script.js`: geen syntaxfouten.
+- Manuele browsercontrole van de gebruikersflow: door de student als voltooid aangegeven.
+- Testverslag bijgewerkt met de definitieve automatische testresultaten.
 
 ### Totale tijdsbesteding
 
@@ -139,12 +147,10 @@ Dit overzicht documenteert het werkelijke ontwikkelingsverloop achteraf en wordt
 
 ## 4. Resterend werk — prioriteiten voor de indiening
 
-1. **Privacy en consistentie:** controleren dat publieke reviewgegevens geen privégegevens van gebruikers bevatten.
-2. **Frontend-annulering:** voorraad, reservatiestatus en tellers controleren na een annulering.
-3. **Automatische tests:** nieuwe tests lokaal uitvoeren en resultaten documenteren.
-4. **Handmatige controles:** registratie, login, reservering, annulering, reviews en mobiele weergave testen.
-5. **Documentatie:** testresultaten en projectstatus definitief bijwerken.
-6. **GitHub:** tijdelijke bestanden opruimen en de definitieve wijzigingen pushen.
+1. **Repository opruimen:** tijdelijk back-upbestand `frontend/script-casse-backup.js` verwijderen als het nog aanwezig is.
+2. **Documentatie finaliseren:** README, PLANNING en TESTING op dezelfde laatste resultaten controleren.
+3. **GitHub:** `git status` controleren, de wijzigingen committen en pushen.
+4. **Indiening:** publieke GitHub-link en inhoud van de repository controleren.
 
 **Definitieve indieningsdatum:** nog te bevestigen via de officiële opdracht.
 
@@ -168,8 +174,8 @@ Dit overzicht documenteert het werkelijke ontwikkelingsverloop achteraf en wordt
 | Projectnaam | The Obsidian Shelf |
 | Vak | Application Architecture |
 | Werkelijke startdatum | **21 oktober 2026** |
-| Laatste update van dit document | **22 oktober 2026** |
-| Geschatte gewerkte uren | **Ongeveer 15 uur** |
+| Laatste update van dit document | **23 oktober 2026** |
+| Geschatte gewerkte uren | **Ongeveer 15 uur tot en met 22 oktober (schatting); geen aparte urenregistratie voor 23 oktober** |
 | Gebruikte technologieën | PHP, Laravel, SQLite, Sanctum, HTML, CSS, JavaScript |
 | Versiebeheer | Git en GitHub |
 | Repository | [The Obsidian Shelf](https://github.com/benhadiSalma/the-obsidian-shelf) |
@@ -199,8 +205,10 @@ Ook testing speelde een belangrijke rol. Door automatische tests uit te voeren k
 
 De totale ontwikkelingstijd was relatief kort, ongeveer 15 uur verspreid over twee dagen. Daarom heb ik prioriteit gegeven aan de verplichte functionaliteiten, de belangrijkste bedrijfsregels, automatische tests en documentatie.
 
-De resterende verbeteringen zijn opgenomen in de planning zodat duidelijk blijft welke controles nog moeten gebeuren vóór de definitieve indiening.
+De resterende opleveringsstappen zijn opgenomen in de planning zodat duidelijk blijft wat nog moet gebeuren vóór de definitieve indiening.
 
 ---
 
 **Bronnen en AI-gebruik:** [README](../README.md#bronnen-en-ai-gebruik).
+
+
