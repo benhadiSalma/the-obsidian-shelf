@@ -234,7 +234,11 @@ node --test frontend\tests\api.test.cjs
 node --check frontend\script.js
 ```
 
-**Bevestigde resultaten van 22 oktober 2026:** 20 Laravel-tests geslaagd (96 assertions) en 8 JavaScript-tests geslaagd. Extra privacy- en frontendtests zijn toegevoegd; voer alle tests opnieuw uit na het kopiëren. Voor scenario's en actuele teststatus: **[Testdocumentatie](docs/TESTING.md)**.
+
+**Bevestigde testresultaten op 23 oktober 2026:** 21 Laravel-tests geslaagd (103 assertions) en 12 JavaScript-tests geslaagd (0 mislukt). De afzonderlijke privacytest slaagde met 7 assertions en is inbegrepen in de 21 backendtests. 
+
+Zie [TESTING.md](docs/TESTING.md) voor alle scenario's.
+   
 
 ## Deployment
 
@@ -293,12 +297,8 @@ The Obsidian Shelf is voor deze opdracht uitgewerkt als een **afzonderlijke fron
 
 ChatGPT werd gebruikt als hulpmiddel bij:
 
-- het begrijpen en structureren van de opdracht;
-- het bespreken en verbeteren van PHP-, Laravel- en JavaScript-code;
-- het opsporen van fouten en voorstellen van oplossingen;
-- het uitwerken van reserveringsregels en testscenario's;
-- het opstellen en verbeteren van documentatie.
-
+   ChatGPT werd gebruikt bij het analyseren van de opdracht, het genereren en aanpassen van delen van de PHP-, Laravel- en JavaScript-code, het oplossen van programmeerfouten, het opstellen van testscenario's en het schrijven en verbeteren van projectdocumentatie.
+   
 ### Technische referenties
 
 - [Laravel Documentation](https://laravel.com/docs) — Laravel, routing, Eloquent, migrations en testing.

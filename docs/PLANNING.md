@@ -17,7 +17,7 @@ Een fictieve romantasy-boekhandel bouwen met **twee afzonderlijke applicaties** 
 De bezoeker kan boeken bekijken; na login kan een gebruiker reserveren, annuleren, zijn wishlist beheren en reviews schrijven.
 
 **Startdatum:** 21 oktober 2026.  
-**Geschatte totale werktijd tot 22 oktober 2026:** ongeveer 15 uur.
+**Geschatte totale werktijd tot 23 oktober 2026:** ongeveer 18 uur.
 
 ---
 
@@ -93,10 +93,10 @@ De bezoeker kan boeken bekijken; na login kan een gebruiker reserveren, annulere
 - [x] Gebruikte bronnen en ChatGPT expliciet documenteren.
 - [x] Deploymentinstructies voorzien voor de gekozen technologie.
 - [x] Publieke GitHub-repository met `backend/` en `frontend/`.
-- [ ] Laatste documentatie- en codecorrecties controleren en pushen.
-- [ ] Controleren en verwijderen van tijdelijk back-upbestand `frontend/script-casse-backup.js` uit de Git-repository.
+- [x] Laatste documentatie- en codecorrecties controleren en pushen.
+- [x] Controleren en verwijderen van tijdelijk back-upbestand `frontend/script-casse-backup.js` uit de Git-repository.
 - [x] Laatste handmatige tests uitvoeren.
-- [ ] Finale documentatie (README, TESTING, PLANNING) controleren en committen.
+- [x] Finale documentatie (README, TESTING, PLANNING) controleren en committen.
 
 ---
 
@@ -147,12 +147,12 @@ Dit overzicht documenteert het werkelijke ontwikkelingsverloop achteraf en wordt
 
 ## 4. Resterend werk — prioriteiten voor de indiening
 
-1. **Repository opruimen:** tijdelijk back-upbestand `frontend/script-casse-backup.js` verwijderen als het nog aanwezig is.
-2. **Documentatie finaliseren:** README, PLANNING en TESTING op dezelfde laatste resultaten controleren.
-3. **GitHub:** `git status` controleren, de wijzigingen committen en pushen.
-4. **Indiening:** publieke GitHub-link en inhoud van de repository controleren.
+1[x]. **Repository opruimen:** tijdelijk back-upbestand `frontend/script-casse-backup.js` verwijderen als het nog aanwezig is.
+2[x]. **Documentatie finaliseren:** README, PLANNING en TESTING op dezelfde laatste resultaten controleren.
+3[x]. **GitHub:** `git status` controleren, de wijzigingen committen en pushen.
+4[x]. **Indiening:** publieke GitHub-link en inhoud van de repository controleren.
 
-**Definitieve indieningsdatum:** nog te bevestigen via de officiële opdracht.
+**Definitieve indieningsdatum:** 28/10/2026.
 
 ---
 
