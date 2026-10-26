@@ -8,10 +8,24 @@ const vm = require('node:vm');
 
 const frontendPath = path.resolve(__dirname, '..');
 
-const script = fs.readFileSync(
-    path.join(frontendPath, 'script.js'),
-    'utf8'
-);
+// Load the exact script list used by index.html in the same order.
+// Classic scripts intentionally share the same global lexical environment.
+const scripts = [
+    'js/store.js',
+    'js/bookstore-dao.js',
+    'js/ui.js',
+    'js/dom.js',
+    'js/catalog.js',
+    'js/account.js',
+    'js/reservations.js',
+    'js/wishlist.js',
+    'js/reviews.js',
+    'script.js'
+];
+
+const script = scripts.map(file => fs.readFileSync(
+    path.join(frontendPath, file), 'utf8'
+)).join('\n');
 
 function response(data, status = 200) {
     return {
@@ -411,5 +425,40 @@ test('le compteur Purchases ignore les réservations annulées', () => {
 
     assert.equal(elements.get('wishlist-count').textContent, 2);
     assert.equal(elements.get('purchases-count').textContent, 2);
+});
+
+
+// TEST 13 - Script loading order matches dependencies
+
+test('les modules sont inclus dans l’ordre de leurs dépendances', () => {
+    const html = fs.readFileSync(path.join(frontendPath, 'index.html'), 'utf8');
+    const listed = [...html.matchAll(/<script\s+src="([^"]+)"/g)]
+        .map(match => match[1]);
+    assert.deepEqual(listed, ['config.js', ...scripts]);
+    assert.equal(new Set(listed).size, listed.length);
+});
+
+// TEST 14 - DAO remains separated from DOM code
+
+test('les accès API sont isolés du code de présentation', () => {
+    const dao = fs.readFileSync(path.join(frontendPath, 'js/bookstore-dao.js'), 'utf8');
+    assert.match(dao, /const BookstoreDAO/);
+    assert.match(dao, /async request\(/);
+    assert.doesNotMatch(dao, /document\./);
+    assert.doesNotMatch(dao, /innerHTML|querySelector|addEventListener/);
+});
+
+// TEST 15 - Single entrypoint, separate feature responsibilities
+
+test('le point d’entrée est petit et les responsabilités sont réparties', () => {
+    const entry = fs.readFileSync(path.join(frontendPath, 'script.js'), 'utf8');
+    const reservations = fs.readFileSync(path.join(frontendPath, 'js/reservations.js'), 'utf8');
+    const reviews = fs.readFileSync(path.join(frontendPath, 'js/reviews.js'), 'utf8');
+    const accounts = fs.readFileSync(path.join(frontendPath, 'js/account.js'), 'utf8');
+    assert.match(entry, /ArchiveUI\.init\(\)/);
+    assert.doesNotMatch(entry, /BookstoreDAO|handleReservation|renderCatalog/);
+    assert.match(reservations, /handleCancellation\(/);
+    assert.match(reviews, /bindReviewForm\(/);
+    assert.match(accounts, /bindAuth\(/);
 });
 

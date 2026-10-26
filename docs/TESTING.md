@@ -1,7 +1,7 @@
 # TESTING — The Obsidian Shelf
 
 > Testverslag voor **Application Architecture**.  
-> Laatste update: **23 oktober 2026**.
+> Laatste update: **26 oktober 2026**.
 
 [← README](../README.md) · [API](API.md) · [Architectuur](ARCHITECTURE.md) · [Planning](PLANNING.md)
 
@@ -23,13 +23,13 @@ De Laravel-tests gebruiken `RefreshDatabase` met **SQLite `:memory:`**. Daardoor
 
 ## 2. Bevestigde automatische testresultaten
 
-**Uitgevoerd op 23 oktober 2026 in Windows CMD.** De onderstaande resultaten zijn bevestigd met terminaluitvoer.
+**Uitgevoerd op 23 en 26 oktober 2026 in Windows CMD.** De onderstaande resultaten zijn bevestigd met terminaluitvoer. De backendtests dateren van 23 oktober; de nieuwe frontendtests van 26 oktober.
 
 | Controle | Resultaat |
 | --- | --- |
 | Laravel: `php artisan test` | **21 geslaagd, 103 assertions** |
 | Privacytest afzonderlijk | **1 geslaagd, 7 assertions** |
-| Frontend: `node --test frontend\tests\api.test.cjs` | **12 geslaagd, 0 mislukt** |
+| Frontend: `node --test frontend\tests\api.test.cjs` | **15 geslaagd, 0 mislukt** op 26/10 |
 | JavaScript-syntax: `node --check frontend\script.js` | **Geen syntaxfouten** |
 
 ### Volledige Laravel-testsuite
@@ -70,20 +70,29 @@ Vanuit de hoofdmap van het project:
 
 ```cmd
 node --check frontend\script.js
+for %f in (frontend\js\*.js) do @node --check "%f"
 node --test frontend\tests\api.test.cjs
 ```
 
-Bevestigde uitvoer:
+Bevestigde uitvoer op 26 oktober 2026:
 
 ```text
-tests 12
-pass 12
+tests 15
+pass 15
 fail 0
 cancelled 0
 skipped 0
 ```
 
-**Totaal: 33 geslaagde automatische tests** (21 backend en 12 frontend). De backend telt **103 assertions**. Er zijn geen mislukte tests gerapporteerd.
+**Actueel totaal: 36 geslaagde automatische tests** (21 backendtests + 15 frontendtests; op twee verschillende data bevestigd). De backend telt **103 assertions**. Er zijn geen mislukte tests gerapporteerd.
+
+---
+
+### Herstructurering op 26 oktober 2026
+
+De 12 bestaande frontendscenario's blijven aanwezig. Er zijn **3 aanvullende architectuurtests** toegevoegd: scriptvolgorde, scheiding van API- en DOM-code en verdeling van UI-verantwoordelijkheden. Alle **15 frontendtests zijn geslaagd**.
+
+De backend is niet gewijzigd. De eerder bevestigde Laravel-suite blijft **21 tests en 103 assertions op 23 oktober 2026**. Na de herstructurering heeft de student het werkende systeem met de echte Laravel-backend gecontroleerd en als operationeel bevestigd. Dit was een **manuele controle**, geen geautomatiseerde browsertest.
 
 ---
 
@@ -153,7 +162,7 @@ De standaardbestanden `tests/Unit/ExampleTest.php` en `tests/Feature/ExampleTest
 
 ## 4. Frontend: testscenario's
 
-**Bestand:** `frontend/tests/api.test.cjs`.
+**Bestand:** `frontend/tests/api.test.cjs`. De 12 tests hieronder zijn de oorspronkelijke scenario’s; op 26 oktober kwamen 3 architectuurcontroles bij.
 
 | ID | Scenario | Verwacht resultaat |
 | --- | --- | --- |
@@ -170,7 +179,15 @@ De standaardbestanden `tests/Unit/ExampleTest.php` en `tests/Feature/ExampleTest
 | FE-11 | Succesvolle annulering | Voorraad, status en tellers worden bijgewerkt |
 | FE-12 | Teller `Purchases` | Geannuleerde reserveringen worden niet meegeteld |
 
-**Resultaat:** 12 tests geslaagd, 0 mislukt.
+### Extra architectuurtests na de herstructurering
+
+| ID | Scenario | Verwacht resultaat |
+| --- | --- | --- |
+| FE-13 | Volgorde van scripts in `index.html` | Afhankelijkheden worden in de juiste volgorde geladen; geen dubbele scripts |
+| FE-14 | Scheiding tussen DAO en DOM | `bookstore-dao.js` bevat API-/HTTP-code maar geen DOM-manipulatie |
+| FE-15 | Kleine entrypoint en aparte verantwoordelijkheden | `script.js` start enkel de UI op; reservaties, reviews en accounts staan in featurebestanden |
+
+**Oorspronkelijk resultaat (23 oktober):** 12 geslaagd. **Na herstructurering (26 oktober): 15 geslaagd, 0 mislukt**.
 
 **Testbeperking:** deze tests gebruiken **gesimuleerde API-responses**. Ze controleren het JavaScript-gedrag, maar zijn geen automatische end-to-endtests met een echte Laravel-server en browser.
 
@@ -178,7 +195,7 @@ De standaardbestanden `tests/Unit/ExampleTest.php` en `tests/Feature/ExampleTest
 
 ## 5. Manuele browsertests
 
-De volgende scenario's zijn door de student als **uitgevoerd en geslaagd** aangegeven. In tegenstelling tot de automatische tests is hiervan geen afzonderlijke terminaluitvoer beschikbaar.
+De onderstaande controles zijn gebaseerd op de eerder gerapporteerde manuele scenario's. Op **26 oktober 2026** heeft de student daarnaast bevestigd dat de **herstructureerde applicatie met de echte backend operationeel is**. Voor manuele controles bestaat geen afzonderlijk automatisch testrapport.
 
 ### Catalogus en boekdetails
 
@@ -217,6 +234,7 @@ Open Windows CMD in de **hoofdmap** van `the-obsidian-shelf`:
 
 ```cmd
 node --check frontend\script.js
+for %f in (frontend\js\*.js) do @node --check "%f"
 node --test frontend\tests\api.test.cjs
 cd backend
 php artisan test
@@ -252,12 +270,14 @@ Niet alles is automatisch gedekt. Er zijn bijvoorbeeld geen afzonderlijke belast
 
 ## 8. Eindconclusie
 
-Op **23 oktober 2026** zijn de resultaten van de volledige automatische testsuite bevestigd:
+De resultaten zijn op **twee testmomenten** bevestigd:
 
-- **Backend:** 21/21 geslaagd, **103 assertions**.
-- **Frontend:** 12/12 geslaagd, **0 mislukt**.
-- **JavaScript-syntax:** geen fouten.
-- **Totaal:** **33 automatische tests geslaagd**.
+- **Backend (23 oktober 2026):** 21 van de 21 tests geslaagd, **103 assertions**.
+- **Frontend na opsplitsing (26 oktober 2026):** 15 van de 15 tests geslaagd, **0 mislukt**.
+- **Syntaxcontrole `frontend/script.js` (26 oktober):** geen fouten.
+- **Totaal van de laatst bevestigde suites:** **36 automatische tests** (21 backend + 15 frontend). De backend is tijdens de opsplitsing niet gewijzigd.
+
+De student heeft na de opsplitsing bevestigd dat de website met de echte backend werkt. Dat is een manuele verificatie en geen geautomatiseerde end-to-endtest.
 
 De tests controleren de belangrijkste bedrijfsregels, inclusief voorraadbeheer, toegangsrechten, reserveringen, annuleringen, reviews en de bescherming van privégegevens. De manuele controles vullen de automatische tests aan, maar vormen geen vervanging voor geautomatiseerde end-to-endtests.
 

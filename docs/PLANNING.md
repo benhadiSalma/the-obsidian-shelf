@@ -1,7 +1,7 @@
 # PLANNING — The Obsidian Shelf
 
 > Projectplanning en voortgang voor **Application Architecture**.  
-> Bijgewerkt op **23 oktober 2026**.
+> Bijgewerkt op **26 oktober 2026**.
 
 [← README](../README.md) · [Architectuur](ARCHITECTURE.md) · [Testing](TESTING.md)
 
@@ -17,7 +17,7 @@ Een fictieve romantasy-boekhandel bouwen met **twee afzonderlijke applicaties** 
 De bezoeker kan boeken bekijken; na login kan een gebruiker reserveren, annuleren, zijn wishlist beheren en reviews schrijven.
 
 **Startdatum:** 21 oktober 2026.  
-**Geschatte totale werktijd tot 23 oktober 2026:** ongeveer 18 uur.
+**Geschatte werktijd tot en met 22 oktober 2026:** ongeveer 15 uur (persoonlijke schatting; geen volledige urenregistratie voor de latere wijzigingen).
 
 ---
 
@@ -77,7 +77,8 @@ De bezoeker kan boeken bekijken; na login kan een gebruiker reserveren, annulere
 - [x] 10 specifieke backend-API-tests toevoegen.
 - [x] 8 tests voor de annuleringsflow toevoegen en uitvoeren.
 - [x] Volledige PHP-testsuite uitvoeren: **21 tests, 103 assertions geslaagd** op 23 oktober 2026.
-- [x] Uitgebreide JavaScript-testsuite uitvoeren: **12 tests geslaagd, 0 mislukt** op 23 oktober 2026.
+- [x] Oorspronkelijke JavaScript-testsuite uitvoeren: **12 tests geslaagd, 0 mislukt** op 23 oktober 2026.
+- [x] Herstructurering van de frontend testen: **15 tests geslaagd, 0 mislukt** op 26 oktober 2026, inclusief 3 architectuurcontroles.
 - [x] Aanvullende frontendtests voor annulering en tellercontrole toevoegen.
 - [x] Nieuwe Laravel-privacytest uitvoeren: **1 test geslaagd, 7 assertions** (deel van de 21 backendtests).
 - [x] Manuele browsercontroles van de gebruikersflow uitvoeren (door student gerapporteerd).
@@ -93,10 +94,10 @@ De bezoeker kan boeken bekijken; na login kan een gebruiker reserveren, annulere
 - [x] Gebruikte bronnen en ChatGPT expliciet documenteren.
 - [x] Deploymentinstructies voorzien voor de gekozen technologie.
 - [x] Publieke GitHub-repository met `backend/` en `frontend/`.
-- [x] Laatste documentatie- en codecorrecties controleren en pushen.
+- [ ] Nieuwe modulair opgebouwde versie met bijgewerkte documentatie committen en naar GitHub pushen.
 - [x] Controleren en verwijderen van tijdelijk back-upbestand `frontend/script-casse-backup.js` uit de Git-repository.
 - [x] Laatste handmatige tests uitvoeren.
-- [x] Finale documentatie (README, TESTING, PLANNING) controleren en committen.
+- [ ] Definitieve documentatie (README, ARCHITECTURE, TESTING, PLANNING) controleren en de nieuwe versie committen.
 
 ---
 
@@ -135,6 +136,17 @@ Op 22 oktober 2026 heb ik verder gewerkt aan:
 - Manuele browsercontrole van de gebruikersflow: door de student als voltooid aangegeven.
 - Testverslag bijgewerkt met de definitieve automatische testresultaten.
 
+### 26 oktober 2026 — Frontend opsplitsen na feedback van de docent
+
+Naar aanleiding van feedback over *Separation of Concerns* heb ik de JavaScript-code opgesplitst. De DAO staat nu in `frontend/js/bookstore-dao.js`, de applicatiestatus in `frontend/js/store.js` en de UI-functies in afzonderlijke featurebestanden. `frontend/script.js` start de applicatie alleen nog op.
+
+- Scripts in `frontend/index.html` in de vereiste volgorde geladen.
+- De oorspronkelijke frontendtests behouden en drie controles op de architectuur toegevoegd.
+- **15/15 frontendtests geslaagd, 0 mislukt**, bevestigd door de Windows-terminal.
+- `node --check frontend\script.js` gaf geen syntaxfouten.
+- De student heeft de website met de echte backend opnieuw als operationeel bevestigd.
+- De backendcode bleef ongewijzigd; de laatst bevestigde Laravel-suite is van 23 oktober (**21 tests, 103 assertions**).
+
 ### Totale tijdsbesteding
 
 De geschatte totale werktijd vanaf 21 oktober tot en met 22 oktober 2026 bedraagt **ongeveer 15 uur**.
@@ -147,12 +159,15 @@ Dit overzicht documenteert het werkelijke ontwikkelingsverloop achteraf en wordt
 
 ## 4. Resterend werk — prioriteiten voor de indiening
 
-- [x] Repository opruimen en tijdelijke back-upbestanden verwijderen.
-- [x] README, PLANNING en TESTING finaliseren.
-- [x] Wijzigingen committen en pushen naar GitHub.
-- [x] Publieke repository en indieningslink controleren.
+- [x] Frontend opsplitsen in aparte scripts en DAO apart plaatsen.
+- [x] Nieuwe scripts en scriptvolgorde controleren met frontendtests (**15/15**).
+- [x] Website opnieuw controleren met de werkende Laravel-backend (door student operationeel bevestigd).
+- [x] Documentatie aanpassen aan de nieuwe mapstructuur en testresultaten.
+- [ ] Definitieve wijzigingen controleren met `git status` en committen.
+- [ ] Naar de publieke GitHub-repository pushen en de gepubliceerde bestanden controleren.
+- [ ] GitHub-URL indienen via het opleidingsplatform.
 
-**Definitieve indieningsdatum:** 28 oktober 2026 om 23:59.
+**Indieningsdatum:** woensdag **28 oktober 2026 om 23:59** volgens de opgegeven opdrachtinformatie.
 
 ---
 
@@ -174,12 +189,12 @@ Dit overzicht documenteert het werkelijke ontwikkelingsverloop achteraf en wordt
 | Projectnaam | The Obsidian Shelf |
 | Vak | Application Architecture |
 | Werkelijke startdatum | **21 oktober 2026** |
-| Laatste update van dit document | **23 oktober 2026** |
+| Laatste update van dit document | **26 oktober 2026** |
 | Geschatte gewerkte uren | **Ongeveer 15 uur tot en met 22 oktober (schatting); geen aparte urenregistratie voor 23 oktober** |
 | Gebruikte technologieën | PHP, Laravel, SQLite, Sanctum, HTML, CSS, JavaScript |
 | Versiebeheer | Git en GitHub |
 | Repository | [The Obsidian Shelf](https://github.com/benhadiSalma/the-obsidian-shelf) |
-| Definitieve indieningsdatum | 28 oktober 2026 om 23:59 |
+| Definitieve indieningsdatum | **Woensdag 28 oktober 2026 om 23:59** |
 
 ### Belangrijke Git-activiteit
 
@@ -205,10 +220,8 @@ Ook testing speelde een belangrijke rol. Door automatische tests uit te voeren k
 
 De totale ontwikkelingstijd was relatief kort, ongeveer 15 uur verspreid over twee dagen. Daarom heb ik prioriteit gegeven aan de verplichte functionaliteiten, de belangrijkste bedrijfsregels, automatische tests en documentatie.
 
-De resterende opleveringsstappen zijn opgenomen in de planning zodat duidelijk blijft wat nog moet gebeuren vóór de definitieve indiening.
+De wijzigingen van 26 oktober tonen hoe feedback over onderhoudbaarheid is toegepast. De laatste GitHub- en indieningsstappen staan hierboven nog open totdat ze daadwerkelijk zijn uitgevoerd.
 
 ---
 
 **Bronnen en AI-gebruik:** [README](../README.md#bronnen-en-ai-gebruik).
-
-

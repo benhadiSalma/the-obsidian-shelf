@@ -86,7 +86,17 @@ the-obsidian-shelf/
     ├── index.html
     ├── style.css
     ├── config.js
-    ├── script.js
+    ├── script.js               # Klein opstartbestand
+    ├── js/
+    │   ├── store.js           # Tijdelijke applicatiestatus
+    │   ├── bookstore-dao.js   # HTTP en JSON (DAO)
+    │   ├── ui.js              # UI-coördinatie
+    │   ├── dom.js             # Meldingen, dialogs en helpers
+    │   ├── catalog.js         # Catalogus en navigatie
+    │   ├── account.js         # Accounts en profiel
+    │   ├── reservations.js    # Reserveren en annuleren
+    │   ├── wishlist.js        # Favorieten
+    │   └── reviews.js         # Beoordelingen
     └── tests/api.test.cjs
 ```
 
@@ -95,7 +105,7 @@ the-obsidian-shelf/
 | Patroon / onderdeel | Toepassing |
 | --- | --- |
 | **MVC** | Laravel-controllers verwerken verzoeken; Eloquent-models beheren de data. |
-| **DAO** | `BookstoreDAO` in `frontend/script.js` centraliseert de HTTP-communicatie. |
+| **DAO** | `BookstoreDAO` in `frontend/js/bookstore-dao.js` centraliseert de HTTP-communicatie. |
 | **Service Layer** | `ReservationService` bevat de bedrijfsregels voor reserveren en annuleren. |
 | **Dependency Injection** | Laravel injecteert `ReservationService` in `ReservationController`. |
 | **ORM** | Eloquent beheert relaties tussen boeken, gebruikers, reserveringen en reviews. |
@@ -232,10 +242,11 @@ node --test frontend\tests\api.test.cjs
 
 ```cmd
 node --check frontend\script.js
+for %f in (frontend\js\*.js) do @node --check "%f"
 ```
 
 
-**Bevestigde testresultaten op 23 oktober 2026:** 21 Laravel-tests geslaagd (103 assertions) en 12 JavaScript-tests geslaagd (0 mislukt). De afzonderlijke privacytest slaagde met 7 assertions en is inbegrepen in de 21 backendtests. 
+**Bevestigde resultaten:** op **23 oktober 2026** slaagden 21 Laravel-tests (**103 assertions**). Op **26 oktober 2026** slaagden **15 Node.js-frontendtests** (12 functionele tests en 3 architectuurcontroles), zonder mislukkingen. De privacytest met 7 assertions zit al in de 21 Laravel-tests. In totaal zijn dus **36 automatische tests** bevestigd over de twee testmomenten. Na het opsplitsen heeft de student de website met de echte backend gecontroleerd en als operationeel bevestigd; daarvoor is geen automatisch end-to-endtestrapport beschikbaar. 
 
 Zie [TESTING.md](docs/TESTING.md) voor alle scenario's.
    
@@ -295,7 +306,7 @@ The Obsidian Shelf is voor deze opdracht uitgewerkt als een **afzonderlijke fron
 
 **[ChatGPT — OpenAI](https://chatgpt.com/)**
 
-ChatGPT werd gebruikt bij het analyseren van de opdracht, het genereren en aanpassen van delen van de PHP-, Laravel- en JavaScript-code, het oplossen van programmeerfouten, het opstellen van testscenario's en het schrijven en verbeteren van projectdocumentatie.
+ChatGPT werd gebruikt bij het analyseren van de opdracht, het genereren en aanpassen van delen van de PHP-, Laravel- en JavaScript-code, het oplossen van programmeerfouten, het opstellen van testscenario's en het schrijven en verbeteren van projectdocumentatie. De gegenereerde suggesties zijn besproken, aangepast en gecontroleerd met tests en een manuele controle van de applicatie.
    
 ### Technische referenties
 

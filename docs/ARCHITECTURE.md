@@ -1,6 +1,7 @@
 # Architectuur — The Obsidian Shelf
 **Project:** Fictieve online boekenwinkel  
-**Technologie:** Laravel, PHP, SQLite, HTML, CSS en JavaScript
+**Technologie:** Laravel, PHP, SQLite, HTML, CSS en JavaScript  
+**Bijgewerkt:** 26 oktober 2026
 
 [Terug naar README](../README.md) · [API](API.md) · [Testing](TESTING.md)
 
@@ -68,7 +69,17 @@ the-obsidian-shelf/
     |-- index.html
     |-- style.css
     |-- config.js
-    |-- script.js
+    |-- script.js                # Enkel initialisatie
+    |-- js/
+    |   |-- store.js            # Status en hulpfuncties
+    |   |-- bookstore-dao.js    # DAO en HTTP-communicatie
+    |   |-- ui.js               # Centrale initialisatie
+    |   |-- dom.js              # DOM-hulpfuncties en dialogen
+    |   |-- catalog.js          # Catalogus, filters en boekdetail
+    |   |-- account.js          # Accounts en profiel
+    |   |-- reservations.js     # Reservering en annulering
+    |   |-- wishlist.js         # Wishlist
+    |   `-- reviews.js          # Reviews
     `-- tests/api.test.cjs
 ```
 
@@ -81,9 +92,15 @@ the-obsidian-shelf/
 - `index.html` bevat de structuur van de website.
 - `style.css` verzorgt het dark-academia-design.
 - `config.js` bevat het adres van de backend-API.
-- `Store` houdt de huidige gegevens tijdelijk bij in de browser.
-- `BookstoreDAO` verstuurt API-verzoeken met `fetch()`.
-- `ArchiveUI` verwerkt klikken, formulieren, boekkaarten en meldingen.
+- `js/store.js`: `Store` bewaart tijdelijke status in de browser.
+- `js/bookstore-dao.js`: `BookstoreDAO` beheert alle API-paden, Bearer-tokens, JSON en foutafhandeling; dit bestand bevat **geen DOM-manipulatie**.
+- `js/ui.js`: `ArchiveUI` coördineert de initialisatie; de functies zitten in aparte featurebestanden.
+- `js/catalog.js`: boeken laden, zoeken, filteren en details tonen.
+- `js/account.js`: account, profiel en sessie beheren.
+- `js/reservations.js`: reserveren en annuleren via de DAO.
+- `js/wishlist.js` en `js/reviews.js`: favorieten en beoordelingen.
+- `js/dom.js`: gedeelde UI-hulpfuncties zoals modals, meldingen en tellers.
+- `script.js`: registreert alleen de `DOMContentLoaded`-initialisatie.
 
 ### Backend
 
@@ -124,7 +141,7 @@ De frontend is geen Laravel Blade-view, maar een apart deelproject.
 
 ### 4.2 DAO (Data Access Object)
 
-`BookstoreDAO` centraliseert de communicatie tussen de website en de REST API.
+`BookstoreDAO` in `frontend/js/bookstore-dao.js` centraliseert de communicatie tussen de website en de REST API. Bij een wijziging van een endpoint of HTTP-header wordt de aanpassing in dit bestand gedaan; de UI spreekt uitsluitend de publieke DAO-methoden aan.
 
 ```js
 getReservations: () =>
@@ -223,13 +240,21 @@ Als er iets fout gaat, kan de transactie teruggedraaid worden. Zo vermijdt de ap
 
 - **Waarom aparte projecten?** De frontend en backend kunnen apart worden onderhouden, getest en gedeployed.
 - **Waarom SQLite?** De database is eenvoudig te gebruiken voor een lokale demonstratie en vereist geen aparte databaseserver.
-- **Waarom JavaScript zonder framework?** De huidige website werkt met standaard HTML, CSS en JavaScript. Bij uitbreiding kan het grote script.js in verschillende modules worden opgesplitst.
+- **Waarom JavaScript zonder framework?** De website gebruikt standaard HTML, CSS en JavaScript. De code is **opgesplitst in aparte scripts per verantwoordelijkheid** zonder bijkomende frameworkafhankelijkheid.
+- **Waarom klassieke scripts met `Object.assign`?** `ArchiveUI` krijgt zijn methoden uit aparte featurebestanden. Dit behoudt de bestaande werking en `this`-aanroepen, terwijl bijvoorbeeld DAO-onderhoud beperkt blijft tot `bookstore-dao.js`. De scriptvolgorde in `index.html` is bewust vastgelegd: `Store`, DAO, UI-coördinator, UI-functies en tenslotte het opstartscript.
+- **Afweging:** deze oplossing scheidt de bestanden fysiek en houdt de API-communicatie uit de UI. De klassieke scripts gebruiken nog gedeelde globale objecten (`Store`, `BookstoreDAO`, `ArchiveUI`) en de UI-methoden worden via `Object.assign` toegevoegd. Het zijn dus **geen onafhankelijk importeerbare ES-modules**. Later zouden `import`/`export` en interfaces de koppeling verder kunnen verminderen.
 
 **Beperking:** betalingen gebeuren volgens de opdracht bij afhaling. Er is nog geen online betaalsysteem of volledige afhaaladministratie.
 
 ---
 
-## 8. Bronnen
+## 8. Controle van de nieuwe structuur
+
+Op 26 oktober 2026 zijn na de opsplitsing **15 van de 15 frontendtests geslaagd**. Drie bijkomende tests controleren specifiek de volgorde van de scripts, de afwezigheid van DOM-code in het DAO-bestand en de verdeling van de verantwoordelijkheden. De student heeft de website daarna met de echte backend als operationeel bevestigd. De backendcode is niet veranderd; de laatst bevestigde Laravel-testsuite telde 21 geslaagde tests en 103 assertions op 23 oktober 2026.
+
+---
+
+## 9. Bronnen
 
 Voor het visuele concept gebruikte ik mijn eerdere project:
 

@@ -1,13 +1,16 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Obsidian Shelf — Royal Romantasy Bookstore &amp; Archive</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <!-- Ambient Candlelight & Floating Gold Dust -->
@@ -35,7 +38,9 @@
                 <span class="page-kicker">Private Collection</span>
                 <h1>The Obsidian Shelf</h1>
                 <p class="intro-text">
-                    Welcome, seeker of stories. You have reached the private sanctuary of the world's most exquisite Romantasy &amp; Dark Academia manuscripts. Explore the catalog, reserve editions for pickup, and inscribe your reviews.
+                    Welcome, seeker of stories. You have reached the private sanctuary of the world's most exquisite
+                    Romantasy &amp; Dark Academia manuscripts. Explore the catalog, reserve editions for pickup, and
+                    inscribe your reviews.
                 </p>
                 <button id="btn-open-archive" class="btn-enter" type="button">
                     Open the Archive
@@ -50,7 +55,7 @@
         <header class="royal-header">
             <div class="header-top-bar">
                 <button id="btn-reopen-book" class="ghost-gold-btn" type="button">
-                     Return to Grimoire Cover
+                    Return to Grimoire Cover
                 </button>
 
                 <div class="scribe-status">
@@ -74,11 +79,11 @@
             <!-- Main Navigation -->
             <nav class="archive-nav" aria-label="Main navigation">
                 <button class="nav-tab active" data-view="catalog" type="button">
-                     Bookstore Catalog
+                    Bookstore Catalog
                 </button>
 
                 <button class="nav-tab" data-view="profile" type="button">
-                     My Scribe Profile &amp; Purchases
+                    My Scribe Profile &amp; Purchases
                     <span id="purchases-count" class="badge-count">0</span>
                 </button>
 
@@ -88,7 +93,7 @@
                 </button>
 
                 <button class="nav-tab" data-view="rules" type="button">
-                     Laws of the Archive
+                    Laws of the Archive
                 </button>
             </nav>
 
@@ -97,12 +102,8 @@
                 <div class="search-wrapper">
                     <span class="search-icon">🔍</span>
                     <label class="visually-hidden" for="search-input">Search books</label>
-                    <input
-                        type="search"
-                        id="search-input"
-                        placeholder="Search by title, author, ISBN code, or trope..."
-                        autocomplete="off"
-                    >
+                    <input type="search" id="search-input" placeholder="Search by title, author, ISBN code, or trope..."
+                        autocomplete="off">
                 </div>
 
                 <div class="filter-pills">
@@ -154,35 +155,31 @@
                         <div class="form-grid">
                             <div class="input-group">
                                 <label for="profile-name">Name</label>
-                                <input id="profile-name" name="name" type="text"
-                                       required maxlength="255" autocomplete="name">
+                                <input id="profile-name" name="name" type="text" required maxlength="255"
+                                    autocomplete="name">
                             </div>
 
                             <div class="input-group">
                                 <label for="profile-handle">Username</label>
-                                <input id="profile-handle" name="username" type="text"
-                                       required minlength="3" maxlength="50"
-                                       pattern="[a-zA-Z0-9_-]+" autocomplete="username">
+                                <input id="profile-handle" name="username" type="text" required minlength="3"
+                                    maxlength="50" pattern="[a-zA-Z0-9_-]+" autocomplete="username">
                             </div>
 
                             <div class="input-group">
                                 <label for="profile-contact">Email</label>
-                                <input id="profile-contact" name="email" type="email"
-                                       required autocomplete="email">
+                                <input id="profile-contact" name="email" type="email" required autocomplete="email">
                             </div>
 
                             <div class="input-group">
                                 <label for="profile-password">New password (optional)</label>
-                                <input id="profile-password" name="password" type="password"
-                                       minlength="8" autocomplete="new-password"
-                                       placeholder="Leave blank to keep current password">
+                                <input id="profile-password" name="password" type="password" minlength="8"
+                                    autocomplete="new-password" placeholder="Leave blank to keep current password">
                             </div>
 
                             <div class="input-group">
                                 <label for="profile-password-confirm">Confirm new password</label>
-                                <input id="profile-password-confirm"
-                                       name="password_confirmation" type="password"
-                                       minlength="8" autocomplete="new-password">
+                                <input id="profile-password-confirm" name="password_confirmation" type="password"
+                                    minlength="8" autocomplete="new-password">
                             </div>
                         </div>
 
@@ -292,13 +289,11 @@
     </div>
 
     <!-- LOGIN AND REGISTRATION MODAL -->
-    <div id="auth-modal" class="royal-modal-overlay"
-         role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+    <div id="auth-modal" class="royal-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
 
         <div class="gatekeeper-container modal-panel">
-            <button type="button" class="modal-close"
-                    data-close-modal="auth-modal"
-                    aria-label="Close login dialog">&times;</button>
+            <button type="button" class="modal-close" data-close-modal="auth-modal"
+                aria-label="Close login dialog">&times;</button>
 
             <div class="seal-icon">✦</div>
             <h2 id="auth-modal-title">Break the Seal</h2>
@@ -315,16 +310,15 @@
                     <label for="login-email">
                         Scribe's Identifier (Email)
                     </label>
-                    <input id="login-email" type="email" required
-                           autocomplete="email" placeholder="reader@example.com">
+                    <input id="login-email" type="email" required autocomplete="email" placeholder="reader@example.com">
                 </div>
 
                 <div class="input-group">
                     <label for="login-password">
                         Secret Incantation (Password)
                     </label>
-                    <input id="login-password" type="password" required
-                           autocomplete="current-password" placeholder="••••••••">
+                    <input id="login-password" type="password" required autocomplete="current-password"
+                        placeholder="••••••••">
                 </div>
 
                 <p id="login-error" class="form-message" role="alert"></p>
@@ -338,42 +332,36 @@
             <form id="register-form" class="is-hidden">
                 <div class="input-group">
                     <label for="reg-name">Scribe Name</label>
-                    <input id="reg-name" type="text" required
-                           autocomplete="name" placeholder="Feyre Archeron">
+                    <input id="reg-name" type="text" required autocomplete="name" placeholder="Feyre Archeron">
                 </div>
 
                 <div class="input-group">
                     <label for="reg-username">
                         Username (letters, numbers, _ or -)
                     </label>
-                    <input id="reg-username" type="text"
-                           required minlength="3" maxlength="50"
-                           pattern="[a-zA-Z0-9_-]+"
-                           autocomplete="username" placeholder="VelvetReader">
+                    <input id="reg-username" type="text" required minlength="3" maxlength="50" pattern="[a-zA-Z0-9_-]+"
+                        autocomplete="username" placeholder="VelvetReader">
                 </div>
 
                 <div class="input-group">
                     <label for="reg-email">Email Address</label>
-                    <input id="reg-email" type="email" required
-                           autocomplete="email" placeholder="scribe@obsidian.test">
+                    <input id="reg-email" type="email" required autocomplete="email" placeholder="scribe@obsidian.test">
                 </div>
 
                 <div class="input-group">
                     <label for="reg-password">
                         Create Incantation (Min. 8 chars)
                     </label>
-                    <input id="reg-password" type="password"
-                           required minlength="8"
-                           autocomplete="new-password" placeholder="••••••••">
+                    <input id="reg-password" type="password" required minlength="8" autocomplete="new-password"
+                        placeholder="••••••••">
                 </div>
 
                 <div class="input-group">
                     <label for="reg-password-confirm">
                         Confirm Incantation
                     </label>
-                    <input id="reg-password-confirm" type="password"
-                           required minlength="8"
-                           autocomplete="new-password" placeholder="••••••••">
+                    <input id="reg-password-confirm" type="password" required minlength="8" autocomplete="new-password"
+                        placeholder="••••••••">
                 </div>
 
                 <p id="register-error" class="form-message" role="alert"></p>
@@ -392,13 +380,11 @@
     </div>
 
     <!-- BOOK DETAILS AND REVIEWS -->
-    <div id="book-modal" class="royal-modal-overlay"
-         role="dialog" aria-modal="true" aria-labelledby="modal-book-title">
+    <div id="book-modal" class="royal-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-book-title">
 
         <div class="royal-modal-scroll modal-panel">
-            <button type="button" class="modal-close dark-close"
-                    data-close-modal="book-modal"
-                    aria-label="Close book details">&times;</button>
+            <button type="button" class="modal-close dark-close" data-close-modal="book-modal"
+                aria-label="Close book details">&times;</button>
 
             <div class="modal-kicker" id="modal-book-tropes">
                 Romantasy Manuscript
@@ -413,8 +399,7 @@
             <p class="modal-synopsis" id="modal-book-synopsis"></p>
 
             <!-- Pickup Confirmation -->
-            <div id="modal-pickup-confirmation"
-                 class="pickup-confirmation-box is-hidden"></div>
+            <div id="modal-pickup-confirmation" class="pickup-confirmation-box is-hidden"></div>
 
             <div class="modal-meta-bar">
                 <span id="modal-book-price" class="parchment-badge">€0.00</span>
@@ -452,9 +437,8 @@
                     </select>
 
                     <label for="review-comment">Your review</label>
-                    <textarea id="review-comment" rows="3"
-                              required minlength="3" maxlength="1000"
-                              placeholder="Write your review of this manuscript..."></textarea>
+                    <textarea id="review-comment" rows="3" required minlength="3" maxlength="1000"
+                        placeholder="Write your review of this manuscript..."></textarea>
 
                     <p id="review-error" class="form-message" role="alert"></p>
 
@@ -466,7 +450,19 @@
         </div>
     </div>
 
+
     <script src="config.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/bookstore-dao.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/dom.js"></script>
+    <script src="js/catalog.js"></script>
+    <script src="js/account.js"></script>
+    <script src="js/reservations.js"></script>
+    <script src="js/wishlist.js"></script>
+    <script src="js/reviews.js"></script>
     <script src="script.js"></script>
+
 </body>
+
 </html>
