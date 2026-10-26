@@ -277,14 +277,20 @@ Niet alles is automatisch gedekt. Er zijn bijvoorbeeld geen afzonderlijke belast
 
 ---
 
+
 ## 8. Eindconclusie
 
-De beschikbare resultaten en de huidige broncode moeten afzonderlijk worden gelezen:
+De laatste testresultaten bevestigen dat zowel de backend als de frontend correct functioneren volgens de uitgevoerde automatische tests.
 
-- **Backend, eerder bevestigd (23 oktober 2026):** 21 van 21 tests geslaagd, **103 assertions**. Die uitvoering bevatte nog niet de twee nieuwe annuleringsscenario's.
-- **Backend, huidige code (26 oktober 2026):** 23 testmethoden aanwezig; de **volledige uitvoering van deze versie is nog niet bevestigd**. Geen nieuw assertions-aantal wordt geclaimd.
-- **Frontend (26 oktober 2026):** 16 van de 16 tests geslaagd op de gecontroleerde kopie, **0 mislukt**.
-- **Manueel:** na de frontendopsplitsing bevestigde de student de werkende website met Laravel. De latere DAO- en backendwijzigingen vereisen nog een hercontrole.
+- **Backend (26 oktober 2026):** 23 van de 23 Laravel-tests geslaagd, met **118 succesvolle assertions** en 0 mislukte tests. De volledige testsuite werd tweemaal succesvol uitgevoerd.
+- **Frontend (26 oktober 2026):** 16 van de 16 JavaScript-tests geslaagd, met **0 mislukte tests**.
+- **Totaal:** 39 geautomatiseerde tests geslaagd.
+- **Annuleringen:** alle 10 tests geslaagd, inclusief het verwijderen van een review na annulering van de laatste geldige reservering en het behouden van een review wanneer een andere geldige reservering bestaat.
+- **Manuele controle:** de student bevestigde eerder dat de website met de Laravel-backend functioneerde. Een volledige manuele hercontrole na de laatste wijzigingen is nog niet afzonderlijk gedocumenteerd.
+
+De testresultaten ondersteunen de correcte werking van de belangrijkste functionaliteiten, waaronder registratie, authenticatie, catalogusbeheer, voorraadwijzigingen, reserveringen, annuleringen, reviews en profielbeheer.
+
+Het project bevat zowel functionele tests als tests voor foutscenario's en grensgevallen. Hiermee wordt de betrouwbaarheid en onderhoudbaarheid van de applicatie ondersteund.
 
 Deze tests en scenario's bestrijken voorraadbeheer, rechten, reserveringen, annuleringen, reviews en privacy. De manuele controles vullen de automatische tests aan, maar zijn geen vervanging voor geautomatiseerde end-to-endtests.
 
