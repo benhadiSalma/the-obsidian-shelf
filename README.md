@@ -320,6 +320,13 @@ ChatGPT werd gebruikt bij het analyseren van de opdracht, het genereren en aanpa
 - [Transparent Textures](https://www.transparenttextures.com/) — achtergrondtextuur gebruikt in het CSS-ontwerp.
 
 
+### Definitieve testresultaten — 26 oktober 2026
+
+- Backend (Laravel/PHPUnit): 23 tests geslaagd, 118 assertions.
+- Frontend (Node.js Test Runner): 16 tests geslaagd.
+- Totaal: 39 geslaagde geautomatiseerde tests.
+- De 10 annuleringstests omvatten ook het verwijderen of behouden van reviews na een annulering.
+
 
 ## Beperkingen
 
