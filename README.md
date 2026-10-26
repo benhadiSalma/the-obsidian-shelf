@@ -57,6 +57,7 @@ Dit is een **schoolproject**. De winkel is fictief en demonstratiereviews worden
 - Het aanmaken en annuleren van een reservering gebeurt binnen een **databasetransactie**.
 - Alleen de ingelogde eigenaar mag zijn reservering binnen **24 uur** annuleren.
 - Bij een succesvolle annulering krijgt de reservering de status `cancelled` en wordt de stock één keer teruggegeven.
+- Als de gebruiker na annulering geen andere reservering met status `confirmed` of `collected` voor hetzelfde boek heeft, wordt zijn bestaande review voor dat boek verwijderd. Een andere geldige reservering behoudt het reviewrecht en de review.
 - De opdracht vereenvoudigt de aankoopflow: gereserveerde boeken worden verondersteld te worden afgehaald en betaald.
 
 ## Architectuur en projectstructuur
@@ -105,7 +106,7 @@ the-obsidian-shelf/
 | Patroon / onderdeel | Toepassing |
 | --- | --- |
 | **MVC** | Laravel-controllers verwerken verzoeken; Eloquent-models beheren de data. |
-| **DAO** | `BookstoreDAO` in `frontend/js/bookstore-dao.js` centraliseert de HTTP-communicatie. |
+| **DAO** | `BookstoreDAO` in `frontend/js/bookstore-dao.js` centraliseert de HTTP-communicatie; de HTTP-client en tokenprovider zijn configureerbare afhankelijkheden. |
 | **Service Layer** | `ReservationService` bevat de bedrijfsregels voor reserveren en annuleren. |
 | **Dependency Injection** | Laravel injecteert `ReservationService` in `ReservationController`. |
 | **ORM** | Eloquent beheert relaties tussen boeken, gebruikers, reserveringen en reviews. |
@@ -222,7 +223,7 @@ De testbestanden zijn gescheiden per deelproject:
 | Deelproject | Testbestand | Doel |
 | --- | --- | --- |
 | Backend | `backend/tests/Feature/BookstoreApiTest.php` | Registratie, login, catalogus, voorraad, reserveringen, reviews en profiel. |
-| Backend | `backend/tests/Feature/ReservationCancellationTest.php` | 8 tests voor annulering binnen/buiten 24 uur, eigenaarschap, voorraadherstel en reviewrechten. |
+| Backend | `backend/tests/Feature/ReservationCancellationTest.php` | 10 tests voor annulering binnen/buiten 24 uur, eigenaarschap, voorraadherstel en reviewrechten vóór en ná annulering. |
 | Frontend | `frontend/tests/api.test.cjs` | HTTP-aanroepen, foutafhandeling en gedrag van de DAO. |
 | Backend | `backend/tests/Feature/BookReviewPrivacyTest.php` | Extra test: publieke reviewers geven geen e-mailadres vrij. |
 
@@ -246,7 +247,7 @@ for %f in (frontend\js\*.js) do @node --check "%f"
 ```
 
 
-**Bevestigde resultaten:** op **23 oktober 2026** slaagden 21 Laravel-tests (**103 assertions**). Op **26 oktober 2026** slaagden in een afzonderlijk gecontroleerde kopie **16 Node.js-frontendtests** (12 functionele tests en 4 architectuurcontroles), zonder mislukkingen. De privacytest met 7 assertions zit al in de 21 Laravel-tests. In totaal zijn dus **37 automatische tests** bevestigd over de twee testmomenten. Na de eerste opsplitsing heeft de student de website met de echte backend als operationeel bevestigd (voor de latere dependency-injectionwijziging); daarvoor is geen automatisch end-to-endtestrapport beschikbaar. 
+**Testresultaten en huidige status (26 oktober 2026):** op **23 oktober** slaagden **21 Laravel-tests (103 assertions)** op een eerdere codeversie. De huidige code bevat **23 backendtests**: de oorspronkelijke 21 en 2 nieuwe annuleringstests. **Een geslaagde volledige uitvoering van deze bijgewerkte backendversie is nog niet bevestigd**; voer hiervoor opnieuw `php artisan test` uit en noteer het echte resultaat. Op **26 oktober** slaagden **16/16 frontendtests** (12 functionele en 4 architectuurtests, op een gecontroleerde kopie). De privacytest zit in de backendtests en mag niet dubbel geteld worden. De student bevestigde eerder dat de modulaire website operationeel was met de echte backend; de laatste backendwijziging en DAO-injectie vereisen nog een volledige controle van de gebruikersflow.
 
 Zie [TESTING.md](docs/TESTING.md) voor alle scenario's.
    

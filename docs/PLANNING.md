@@ -67,6 +67,7 @@ De bezoeker kan boeken bekijken; na login kan een gebruiker reserveren, annulere
 - [x] Annulering binnen 24 uur door de eigenaar.
 - [x] Bij annuleren status wijzigen en stock één keer herstellen.
 - [x] Reviews weigeren wanneer enkel een geannuleerde reservering bestaat.
+- [x] Na feedback over een extra grensgeval de service aanpassen: een review verwijderen bij annulering van de laatste geldige reservering, maar behouden als een andere geldige reservering overblijft (26 oktober).
 
 **Resultaat:** `ReservationService` en beschermde API-routes.
 
@@ -75,8 +76,10 @@ De bezoeker kan boeken bekijken; na login kan een gebruiker reserveren, annulere
 **Doel:** technische fouten en grensgevallen controleren.
 
 - [x] 10 specifieke backend-API-tests toevoegen.
-- [x] 8 tests voor de annuleringsflow toevoegen en uitvoeren.
-- [x] Volledige PHP-testsuite uitvoeren: **21 tests, 103 assertions geslaagd** op 23 oktober 2026.
+- [x] De oorspronkelijke 8 annuleringstests toevoegen en uitvoeren (bevestigd vóór 26 oktober).
+- [x] Twee nieuwe annuleringstests toevoegen op 26 oktober (review verwijderen of behouden); **deze twee tests zijn nog niet als geslaagd bevestigd**.
+- [x] Eerdere volledige PHP-testsuite uitvoeren: **21 tests, 103 assertions geslaagd** op 23 oktober 2026.
+- [ ] Actuele PHP-testsuite met **23 aanwezige tests** uitvoeren en resultaat plus assertions registreren.
 - [x] Oorspronkelijke JavaScript-testsuite uitvoeren: **12 tests geslaagd, 0 mislukt** op 23 oktober 2026.
 - [x] Herstructurering van de frontend testen: **16 tests geslaagd, 0 mislukt** op 26 oktober 2026, inclusief 4 architectuurcontroles (gecontroleerd op een aparte kopie; hertest op eigen computer volgt).
 - [x] Aanvullende frontendtests voor annulering en tellercontrole toevoegen.
@@ -94,10 +97,10 @@ De bezoeker kan boeken bekijken; na login kan een gebruiker reserveren, annulere
 - [x] Gebruikte bronnen en ChatGPT expliciet documenteren.
 - [x] Deploymentinstructies voorzien voor de gekozen technologie.
 - [x] Publieke GitHub-repository met `backend/` en `frontend/`.
-- [ ] Nieuwe modulair opgebouwde versie met bijgewerkte documentatie committen en naar GitHub pushen.
+- [ ] Controleren of de **laatste versie** (inclusief twee nieuwe annuleringstests en deze documentatie) op de in te dienen GitHub-branch staat.
 - [x] Controleren en verwijderen van tijdelijk back-upbestand `frontend/script-casse-backup.js` uit de Git-repository.
 - [x] Laatste handmatige tests uitvoeren.
-- [ ] Definitieve documentatie (README, ARCHITECTURE, TESTING, PLANNING) controleren en de nieuwe versie committen.
+- [ ] Definitieve documentatie (README, API, ARCHITECTURE, TESTING, PLANNING en backend-README) controleren, committen en publiceren.
 
 ---
 
@@ -145,7 +148,9 @@ Naar aanleiding van feedback over *Separation of Concerns* heb ik de JavaScript-
 - **15/15 frontendtests geslaagd in Windows CMD na opsplitsing; daarna 16/16 geslaagd in een aparte gecontroleerde kopie na verbetering van de DAO. Een laatste lokale hertest volgt.**
 - `node --check frontend\script.js` gaf geen syntaxfouten.
 - De student heeft de website met de echte backend opnieuw als operationeel bevestigd.
-- De backendcode bleef ongewijzigd; de laatst bevestigde Laravel-suite is van 23 oktober (**21 tests, 103 assertions**).
+- Later op 26 oktober is de backendcode bijgewerkt: reviews worden na een annulering alleen verwijderd als er voor hetzelfde boek geen andere geldige reservering van de gebruiker bestaat.
+- `ReservationCancellationTest.php` is van 8 naar **10 testmethoden** uitgebreid; in totaal bevat de nieuwste backendcode **23 tests**. Voor die nieuwe volledige backendversie is nog geen geslaagde testrun bevestigd.
+- De laatst bevestigde volledige Laravel-suite is van 23 oktober (**21 tests, 103 assertions**) en geldt voor de eerdere versie.
 
 ### Totale tijdsbesteding
 
@@ -161,11 +166,12 @@ Dit overzicht documenteert het werkelijke ontwikkelingsverloop achteraf en wordt
 
 - [x] Frontend opsplitsen in aparte scripts en DAO apart plaatsen.
 - [x] Nieuwe scripts en scriptvolgorde gecontroleerd met frontendtests (**16/16 op aparte kopie**).
-- [ ] DAO-aanpassing na overnemen opnieuw op eigen computer testen en de browserflow controleren.
+- [ ] De definitieve DAO- en backendwijzigingen samen opnieuw op de eigen computer testen en de browserflow controleren.
 - [x] Website opnieuw controleren met de werkende Laravel-backend (door student operationeel bevestigd).
 - [x] Documentatie aanpassen aan de nieuwe mapstructuur en testresultaten.
+- [ ] Laatste backendtests uitvoeren met `php artisan test` en het werkelijke resultaat noteren.
 - [ ] Definitieve wijzigingen controleren met `git status` en committen.
-- [ ] Naar de publieke GitHub-repository pushen en de gepubliceerde bestanden controleren.
+- [ ] Naar de publieke GitHub-repository pushen en controleren of de definitieve bestanden op de in te dienen branch staan.
 - [ ] GitHub-URL indienen via het opleidingsplatform.
 
 **Indieningsdatum:** woensdag **28 oktober 2026 om 23:59** volgens de opgegeven opdrachtinformatie.
@@ -221,7 +227,7 @@ Ook testing speelde een belangrijke rol. Door automatische tests uit te voeren k
 
 De totale ontwikkelingstijd was relatief kort, ongeveer 15 uur verspreid over twee dagen. Daarom heb ik prioriteit gegeven aan de verplichte functionaliteiten, de belangrijkste bedrijfsregels, automatische tests en documentatie.
 
-De wijzigingen van 26 oktober tonen hoe feedback over onderhoudbaarheid is toegepast. De laatste GitHub- en indieningsstappen staan hierboven nog open totdat ze daadwerkelijk zijn uitgevoerd.
+De wijzigingen van 26 oktober tonen hoe feedback over onderhoudbaarheid is toegepast. Een extra correctie aan de annuleringslogica houdt ook rekening met reeds gepubliceerde reviews. De laatste testrun van de bijgewerkte backend, de controle van de definitieve GitHub-branch en de indiening moeten nog bevestigd worden.
 
 ---
 

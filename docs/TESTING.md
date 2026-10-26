@@ -23,14 +23,15 @@ De Laravel-tests gebruiken `RefreshDatabase` met **SQLite `:memory:`**. Daardoor
 
 ## 2. Bevestigde automatische testresultaten
 
-**Backendresultaten:** door de student uitgevoerd op 23 oktober 2026 in Windows CMD. **Frontendresultaten:** op 26 oktober 2026 opnieuw getest met Node.js op een aparte kopie met de DAO-verbetering. De student moet de tests na het overnemen van deze wijzigingen nog op de eigen computer herhalen.
+**Belangrijk onderscheid tussen code en uitgevoerde tests:** de Laravelresultaten hieronder zijn door de student bevestigd op **23 oktober 2026**, vóór de twee nieuwe annuleringstests. De meest recente code van **26 oktober** heeft **23 backendtests**, maar daarvoor is nog geen volledig geslaagde uitvoering bevestigd. De frontend is op 26 oktober getest op een gecontroleerde kopie met de DAO-verbetering.
 
-| Controle | Resultaat |
+| Controle | Bevestigde status |
 | --- | --- |
-| Laravel: `php artisan test` | **21 geslaagd, 103 assertions** |
-| Privacytest afzonderlijk | **1 geslaagd, 7 assertions** |
-| Frontend: `node --test frontend\tests\api.test.cjs` | **16 geslaagd, 0 mislukt** op 26/10 |
-| JavaScript-syntax: `node --check frontend\script.js` | **Geen syntaxfouten** |
+| Laravel, eerdere codeversie (23/10) | **21 geslaagd, 103 assertions** |
+| Laravel, huidige code (26/10) | **23 tests aanwezig; volledige uitvoering nog te bevestigen** |
+| Privacytest afzonderlijk (eerder) | **1 geslaagd, 7 assertions**; inbegrepen in de 21 |
+| Frontend (26/10) | **16 geslaagd, 0 mislukt** |
+| JavaScript-syntax (26/10) | **Geen syntaxfouten vastgesteld** |
 
 ### Volledige Laravel-testsuite
 
@@ -84,7 +85,7 @@ cancelled 0
 skipped 0
 ```
 
-**Actueel totaal: 37 geslaagde automatische tests** (21 backendtests + 16 frontendtests; op twee verschillende data bevestigd). De backend telt **103 assertions**. Er zijn geen mislukte tests gerapporteerd.
+**Geen gecombineerd actueel slaagcijfer voor de nieuwste code:** 21 backendtests werden op de eerdere versie uitgevoerd, en 16 frontendtests op 26 oktober. De nieuwe backendtestmethoden (CAN-09 en CAN-10) zijn zichtbaar in de code, maar een nieuwe uitvoering van de totale Laravel-suite moet nog bevestigd worden. Daarom worden de 23 huidige backendtests **niet** als reeds geslaagd voorgesteld.
 
 ---
 
@@ -92,7 +93,7 @@ skipped 0
 
 De 12 bestaande frontendscenario's blijven aanwezig. Er zijn **4 aanvullende architectuurtests** toegevoegd: scriptvolgorde, scheiding van API- en DOM-code, verdeling van UI-verantwoordelijkheden en injecteerbare afhankelijkheden. Alle **16 frontendtests zijn geslaagd**.
 
-De backend is niet gewijzigd. De eerder bevestigde Laravel-suite blijft **21 tests en 103 assertions op 23 oktober 2026**. Na de herstructurering heeft de student het werkende systeem met de echte Laravel-backend gecontroleerd en als operationeel bevestigd. Dit was een **manuele controle**, geen geautomatiseerde browsertest.
+Na de modulaire frontendherstructurering is op 26 oktober ook de backend aangepast om bestaande reviews correct te verwerken bij annulering. De nieuwe testmethoden zijn toegevoegd, maar moeten nog opnieuw als onderdeel van `php artisan test` worden uitgevoerd. Na de eerste frontendopsplitsing heeft de student de echte website met Laravel als operationeel bevestigd; **de definitieve backendwijziging is niet afzonderlijk handmatig bevestigd**. Dit is geen geautomatiseerde end-to-endtest.
 
 ---
 
@@ -115,7 +116,7 @@ De backend is niet gewijzigd. De eerder bevestigde Laravel-suite blijft **21 tes
 
 **Resultaat:** 10 tests geslaagd.
 
-### 3.2 `ReservationCancellationTest.php` — 8 tests
+### 3.2 `ReservationCancellationTest.php` — 10 tests
 
 | ID | Scenario | Verwacht resultaat |
 | --- | --- | --- |
@@ -127,8 +128,10 @@ De backend is niet gewijzigd. De eerder bevestigde Laravel-suite blijft **21 tes
 | CAN-06 | Niet-ingelogde gebruiker probeert te annuleren | Weigering (`401`) |
 | CAN-07 | Een reeds afgehaald boek annuleren | Weigering (`409`) |
 | CAN-08 | Review schrijven met alleen een geannuleerde reservering | Weigering (`403`) |
+| CAN-09 | Een review plaatsen en daarna de laatste geldige reservering annuleren | Bestaande review wordt verwijderd; stock wordt hersteld |
+| CAN-10 | Twee geldige reserveringen voor hetzelfde boek; één annuleren na plaatsing van een review | Review blijft bestaan, zolang de andere reservering `confirmed` is |
 
-**Resultaat:** 8 tests geslaagd. Bij de eerder afzonderlijk uitgevoerde annulatiesuite werden **31 assertions** bevestigd. Deze tests zijn inbegrepen in de volledige Laravel-testsuite.
+**Status:** de oorspronkelijke 8 annuleringstests zijn in de eerdere versie geslaagd; daarbij werden **31 assertions** gemeld. **CAN-09 en CAN-10 zijn toegevoegd op 26 oktober, maar hun slagen is nog niet bevestigd** door een nieuwe Laravel-testrun. Het juiste nieuwe aantal assertions moet uit de uitvoer van de tests worden overgenomen.
 
 ### 3.3 `BookReviewPrivacyTest.php` — 1 test
 
@@ -153,10 +156,12 @@ De standaardbestanden `tests/Unit/ExampleTest.php` en `tests/Feature/ExampleTest
 | Testbestand | Tests |
 | --- | ---: |
 | `BookstoreApiTest.php` | 10 |
-| `ReservationCancellationTest.php` | 8 |
+| `ReservationCancellationTest.php` | 10 |
 | `BookReviewPrivacyTest.php` | 1 |
 | Twee `ExampleTest.php`-bestanden | 2 |
-| **Totaal** | **21** |
+| **Totaal aanwezig in de nieuwste broncode** | **23** |
+
+Het aantal **23** is gebaseerd op de aanwezige testmethoden, **niet** op een al bevestigde geslaagde testrun. De vorige uitvoering van 21 tests is hierboven apart beschreven.
 
 ---
 
@@ -226,6 +231,7 @@ De onderstaande controles zijn gebaseerd op de eerder gerapporteerde manuele sce
 - [x] Een gebruiker met een geldige reservering kan een review plaatsen.
 - [x] Een gebruiker zonder geldige reservering kan geen review plaatsen.
 - [x] Publieke reviewgegevens bevatten geen privé-e-mailadres van de auteur.
+- [ ] Op de **definitieve backendversie** controleren dat een review verdwijnt na annulering van de laatste geldige reservering en blijft bestaan als een andere geldige reservering overblijft.
 - [x] De interface, formulieren en knoppen zijn bruikbaar op desktop en op een kleiner scherm.
 
 ---
@@ -263,6 +269,7 @@ De volledige opstartprocedure voor een manuele test staat in [README.md](../READ
 | Annulering na de deadline | Test op de grens van exact 24 uur |
 | Onbevoegde toegang | Authenticatie- en eigenaarschapstests |
 | Ongeldige of dubbele review | Validatie en reserveringscontrole |
+| Review blijft bestaan zonder geldige reservering na annulering | Voorwaardelijke reviewverwijdering in `ReservationService` en testscenario's CAN-09/CAN-10 (uitvoering nog bevestigen) |
 | Lekken van persoonlijke gegevens | Privacytest voor publieke reviews |
 | Foutieve interface na annulering | Frontendtests voor voorraad, status en tellers |
 
@@ -272,15 +279,13 @@ Niet alles is automatisch gedekt. Er zijn bijvoorbeeld geen afzonderlijke belast
 
 ## 8. Eindconclusie
 
-De resultaten zijn op **twee testmomenten** bevestigd:
+De beschikbare resultaten en de huidige broncode moeten afzonderlijk worden gelezen:
 
-- **Backend (23 oktober 2026):** 21 van de 21 tests geslaagd, **103 assertions**.
-- **Frontend na modulaire opsplitsing en extra DAO-verbetering (26 oktober 2026):** 16 van de 16 tests geslaagd op de gecontroleerde kopie, **0 mislukt**.
-- **Syntaxcontrole `frontend/script.js` (26 oktober):** geen fouten.
-- **Totaal van de laatst gecontroleerde suites:** **37 automatische tests** (21 backend + 16 frontend, op verschillende testmomenten). De backend is tijdens de opsplitsing niet gewijzigd.
+- **Backend, eerder bevestigd (23 oktober 2026):** 21 van 21 tests geslaagd, **103 assertions**. Die uitvoering bevatte nog niet de twee nieuwe annuleringsscenario's.
+- **Backend, huidige code (26 oktober 2026):** 23 testmethoden aanwezig; de **volledige uitvoering van deze versie is nog niet bevestigd**. Geen nieuw assertions-aantal wordt geclaimd.
+- **Frontend (26 oktober 2026):** 16 van de 16 tests geslaagd op de gecontroleerde kopie, **0 mislukt**.
+- **Manueel:** na de frontendopsplitsing bevestigde de student de werkende website met Laravel. De latere DAO- en backendwijzigingen vereisen nog een hercontrole.
 
-De student heeft na de opsplitsing bevestigd dat de website met de echte backend werkt. Dat is een manuele verificatie en geen geautomatiseerde end-to-endtest.
-
-De tests controleren de belangrijkste bedrijfsregels, inclusief voorraadbeheer, toegangsrechten, reserveringen, annuleringen, reviews en de bescherming van privégegevens. De manuele controles vullen de automatische tests aan, maar vormen geen vervanging voor geautomatiseerde end-to-endtests.
+Deze tests en scenario's bestrijken voorraadbeheer, rechten, reserveringen, annuleringen, reviews en privacy. De manuele controles vullen de automatische tests aan, maar zijn geen vervanging voor geautomatiseerde end-to-endtests.
 
 **Bronnen en AI-gebruik:** [README — Bronnen en AI-gebruik](../README.md#bronnen-en-ai-gebruik).

@@ -173,6 +173,8 @@ Bij tests kan de HTTP-client en de tokenprovider onafhankelijk worden vervangen 
 - Annuleren is alleen mogelijk binnen 24 uur.
 - Alleen de eigenaar mag een reservering annuleren.
 - Een succesvolle annulering geeft één exemplaar terug.
+- Bij annulering wordt nagegaan of nog een andere reservering met status `confirmed` of `collected` bestaat voor dezelfde gebruiker en hetzelfde boek. Zonder zo'n reservering wordt de bestaande review verwijderd; anders blijft zij behouden.
+- De statuswijziging, voorraadcorrectie en eventuele reviewverwijdering horen bij dezelfde databasetransactie.
 
 Voordeel: complexe regels staan niet verspreid over controllers.
 
@@ -224,7 +226,8 @@ Als er iets fout gaat, kan de transactie teruggedraaid worden. Zo vermijdt de ap
 3. De backend controleert eigenaar, status en de grens van 24 uur.
 4. De reservering krijgt de status `cancelled`.
 5. De stock stijgt met één binnen dezelfde transactie.
-6. De frontend toont de aangepaste status.
+6. De backend controleert of voor dezelfde gebruiker en hetzelfde boek nog een andere geldige reservering bestaat; alleen zonder zo'n reservering wordt de bestaande review verwijderd.
+7. De frontend toont de aangepaste status. Voor de publieke boekdetailpagina wordt de reviewlijst opnieuw uit de API geladen wanneer de gebruiker de boekdetails bekijkt.
 
 > Belangrijk: het verbergen van de knop is niet voldoende. De backend moet elke aanvraag opnieuw controleren.
 
@@ -240,7 +243,7 @@ Als er iets fout gaat, kan de transactie teruggedraaid worden. Zo vermijdt de ap
 - **Statuscontrole:** voorkomt dat dezelfde annulering de stock meerdere keren verhoogt.
 - **Publieke reviewprivacy:** de boekdetail-API laadt van de reviewer alleen `id`, `name` en `username`, niet het e-mailadres.
 
-> **Huidige implementatie:** `ReviewController` aanvaardt voor reviews enkel reserveringen met status `confirmed` of `collected`. Een `cancelled`-reservering verleent dus geen reviewrecht (zie de annuleringstests in [TESTING.md](TESTING.md)).
+> **Huidige implementatie:** `ReviewController` aanvaardt voor het schrijven van reviews enkel reserveringen met status `confirmed` of `collected`. `ReservationService` bewaakt ook het verdere bestaan van een review bij annulering: de laatste geldige reservering annuleren verwijdert de review, maar een tweede geldige reservering behoudt ze. De twee nieuwe grensgevallen zijn beschreven in [TESTING.md](TESTING.md) als CAN-09 en CAN-10.
 
 ---
 
@@ -258,7 +261,7 @@ Als er iets fout gaat, kan de transactie teruggedraaid worden. Zo vermijdt de ap
 
 ## 8. Controle van de nieuwe structuur
 
-Op 26 oktober 2026 zijn na de opsplitsing **16 van de 16 frontendtests geslaagd**. Vier bijkomende tests controleren specifiek de volgorde van de scripts, de afwezigheid van DOM-code in het DAO-bestand, de verdeling van de verantwoordelijkheden en de injecteerbare HTTP-client en tokenprovider. De student heeft de oorspronkelijke modulaire versie met de echte backend als operationeel bevestigd. De extra aanpassing aan de DAO is automatisch getest maar moet na het kopiëren nog manueel worden gecontroleerd. De backendcode is niet veranderd; de laatst bevestigde Laravel-testsuite telde 21 geslaagde tests en 103 assertions op 23 oktober 2026.
+Op 26 oktober 2026 zijn **16 van de 16 frontendtests geslaagd** op een gecontroleerde kopie. Vier aanvullende tests controleren scriptvolgorde, scheiding tussen DAO en DOM-code, aparte UI-verantwoordelijkheden en injecteerbare afhankelijkheden. De student heeft de modulaire website vóór de laatste correcties met de echte backend als operationeel bevestigd. **De backend is op 26 oktober wél verder aangepast**: het verwijderen of behouden van reviews na annulering is toegevoegd, samen met twee nieuwe featuretests. Daardoor bevat de huidige backendcode **23 tests**. De laatst bevestigde volledige backendtestrun blijft **21 geslaagd, 103 assertions op 23 oktober**, vóór deze twee nieuwe tests. Na installatie van de huidige versie moet `php artisan test` opnieuw worden uitgevoerd; het nieuwe assertions-aantal is nog niet vastgesteld.
 
 ---
 

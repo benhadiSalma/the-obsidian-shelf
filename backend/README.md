@@ -8,7 +8,7 @@
 - **Laravel 13 / PHP 8.3+** met SQLite en Sanctum.
 - `routes/api.php` bevat de publieke en beveiligde API-routes.
 - `app/Http/Controllers/Api/` bevat de controllers voor boeken, accounts, reviews, wishlist en reserveringen.
-- `app/Services/ReservationService.php` houdt reservering en stockwijziging samen in databasetransacties.
+- `app/Services/ReservationService.php` houdt reservering, stockwijziging en reviewconsistentie samen in databasetransacties: na annulering verdwijnt een review alleen als er geen andere geldige reservering van dat boek bestaat.
 - `app/Models/` bevat de Eloquent-modellen en relaties.
 
 ## Lokaal installeren (Windows CMD)
@@ -44,7 +44,7 @@ Gebruik `migrate:fresh` niet op een bestaande database: dit verwijdert alle gege
 php artisan test
 ```
 
-**Bevestigd op 23/10/2026:** 21 Laravel-tests geslaagd, 103 assertions. De afzonderlijke privacytest slaagde met 7 assertions en maakt deel uit van deze 21 tests. Zie [TESTING.md](../docs/TESTING.md).
+**Laatst bevestigde volledige testrun (23/10/2026):** 21 Laravel-tests geslaagd, 103 assertions. De afzonderlijke privacytest met 7 assertions was hierin inbegrepen. **Huidige code (26/10/2026):** 23 tests aanwezig, waaronder 10 in `ReservationCancellationTest.php`; de 2 nieuwe tests verifiëren het verwijderen of behouden van reviews na annulering. De volledige suite op deze nieuwste code moet nog opnieuw worden uitgevoerd. Noteer de actuele test- en assertiontotalen na `php artisan test`. Zie [TESTING.md](../docs/TESTING.md).
 
 ## Documentatie
 

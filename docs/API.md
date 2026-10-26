@@ -249,6 +249,8 @@ Annuleert een bestaande reservering.
 
 De backend verhoogt de boekvoorraad met één. Een tweede annulatie mag **niet opnieuw** stock toevoegen.
 
+**Consistentie van reviews bij annulering:** binnen dezelfde databasetransactie controleert `ReservationService` of de gebruiker voor dit boek nog een andere reservering met status `confirmed` of `collected` heeft. Als dat **niet** zo is, verwijdert de backend de bestaande review van die gebruiker voor dit boek. Bestaat er nog een andere geldige reservering, dan **blijft de review bewaard**. Dit verandert de HTTP-statuscode van een geslaagde annulering niet (`200 OK`).
+
 | Situatie | Antwoord |
 | --- | --- |
 | Eigen bevestigde reservering, binnen 24 uur | `200 OK` |
@@ -308,7 +310,7 @@ Geeft de wishlist-items van de ingelogde gebruiker terug, inclusief de gerelatee
 | Al een review geschreven | `409 Conflict` |
 | Ongeldige score of tekst | `422 Unprocessable Entity` |
 
-> **Implementatie:** `ReviewController` aanvaardt uitsluitend een reservering met status `confirmed` of `collected`. Een geannuleerde reservering geeft geen reviewrecht. Zie [Testing](TESTING.md).
+> **Implementatie:** `ReviewController` laat een review uitsluitend toe als de gebruiker voor het boek een reservering met status `confirmed` of `collected` heeft. `ReservationService` verwijdert een bestaande review na annulering alleen wanneer geen andere geldige reservering overblijft. Zie [Testing](TESTING.md), scenario's CAN-08 t/m CAN-10.
 
 ---
 
