@@ -162,4 +162,60 @@ class ReservationCancellationTest extends TestCase
         ])->assertForbidden();
 
         $this->assertDatabaseCount('reviews', 0);
-    }}
+    }
+
+    public function test_cancelling_last_valid_reservation_removes_existing_review(): void
+    {
+        $book = $this->createBook();
+        $user = User::factory()->create();
+        $reservationId = $this->reserveBook($user, $book);
+
+        $this->postJson("/api/books/{$book->id}/reviews", [
+            'score' => 5,
+            'content' => 'A wonderful fantasy story.',
+        ])->assertCreated();
+
+        $this->assertDatabaseHas('reviews', [
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+        ]);
+
+        $this->deleteJson("/api/reservations/{$reservationId}")
+            ->assertOk()
+            ->assertJsonPath('success', true);
+
+        $this->assertDatabaseMissing('reviews', [
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+        ]);
+        $this->assertSame(3, $book->fresh()->stock);
+    }
+
+    public function test_cancelling_one_of_two_valid_reservations_keeps_existing_review(): void
+    {
+        $book = $this->createBook();
+        $user = User::factory()->create();
+        $firstReservationId = $this->reserveBook($user, $book);
+        $secondReservationId = $this->reserveBook($user, $book);
+
+        $this->postJson("/api/books/{$book->id}/reviews", [
+            'score' => 4,
+            'content' => 'I enjoyed this book.',
+        ])->assertCreated();
+
+        $this->deleteJson("/api/reservations/{$firstReservationId}")
+            ->assertOk()
+            ->assertJsonPath('success', true);
+
+        $this->assertDatabaseHas('reservations', [
+            'id' => $secondReservationId,
+            'status' => 'confirmed',
+        ]);
+        $this->assertDatabaseHas('reviews', [
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+            'score' => 4,
+        ]);
+        $this->assertSame(2, $book->fresh()->stock);
+    }
+}

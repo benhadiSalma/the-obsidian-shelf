@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Book;
 use App\Models\Reservation;
+use App\Models\Review;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -92,6 +93,20 @@ final class ReservationService
             Book::query()
                 ->whereKey($reservation->book_id)
                 ->increment('stock');
+
+            // A review remains allowed only if another valid reservation exists.
+            $hasOtherValidReservation = Reservation::query()
+                ->where('user_id', $user->id)
+                ->where('book_id', $reservation->book_id)
+                ->whereIn('status', ['confirmed', 'collected'])
+                ->exists();
+
+            if (! $hasOtherValidReservation) {
+                Review::query()
+                    ->where('user_id', $user->id)
+                    ->where('book_id', $reservation->book_id)
+                    ->delete();
+            }
 
             return [
                 'success' => true,
