@@ -25,7 +25,7 @@
 
 ## Communicatie en authenticatie
 
-De frontend communiceert met Laravel via `fetch()` en de DAO `BookstoreDAO` in `frontend/script.js`.
+De frontend communiceert met Laravel via de Fetch API en `BookstoreDAO` in `frontend/js/bookstore-dao.js`. De DAO verwerkt HTTP-verzoeken, tokens, JSON en API-fouten. De UI gebruikt de publieke DAO-methoden en roept niet zelf `fetch()` aan. De afhankelijkheden voor het toegangstoken en de HTTP-client worden bij de opstart geconfigureerd.
 
 ### Standaardheaders
 

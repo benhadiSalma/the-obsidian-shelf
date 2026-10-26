@@ -78,7 +78,7 @@ De bezoeker kan boeken bekijken; na login kan een gebruiker reserveren, annulere
 - [x] 8 tests voor de annuleringsflow toevoegen en uitvoeren.
 - [x] Volledige PHP-testsuite uitvoeren: **21 tests, 103 assertions geslaagd** op 23 oktober 2026.
 - [x] Oorspronkelijke JavaScript-testsuite uitvoeren: **12 tests geslaagd, 0 mislukt** op 23 oktober 2026.
-- [x] Herstructurering van de frontend testen: **15 tests geslaagd, 0 mislukt** op 26 oktober 2026, inclusief 3 architectuurcontroles.
+- [x] Herstructurering van de frontend testen: **16 tests geslaagd, 0 mislukt** op 26 oktober 2026, inclusief 4 architectuurcontroles (gecontroleerd op een aparte kopie; hertest op eigen computer volgt).
 - [x] Aanvullende frontendtests voor annulering en tellercontrole toevoegen.
 - [x] Nieuwe Laravel-privacytest uitvoeren: **1 test geslaagd, 7 assertions** (deel van de 21 backendtests).
 - [x] Manuele browsercontroles van de gebruikersflow uitvoeren (door student gerapporteerd).
@@ -141,8 +141,8 @@ Op 22 oktober 2026 heb ik verder gewerkt aan:
 Naar aanleiding van feedback over *Separation of Concerns* heb ik de JavaScript-code opgesplitst. De DAO staat nu in `frontend/js/bookstore-dao.js`, de applicatiestatus in `frontend/js/store.js` en de UI-functies in afzonderlijke featurebestanden. `frontend/script.js` start de applicatie alleen nog op.
 
 - Scripts in `frontend/index.html` in de vereiste volgorde geladen.
-- De oorspronkelijke frontendtests behouden en drie controles op de architectuur toegevoegd.
-- **15/15 frontendtests geslaagd, 0 mislukt**, bevestigd door de Windows-terminal.
+- De oorspronkelijke frontendtests behouden en vier controles op de architectuur toegevoegd.
+- **15/15 frontendtests geslaagd in Windows CMD na opsplitsing; daarna 16/16 geslaagd in een aparte gecontroleerde kopie na verbetering van de DAO. Een laatste lokale hertest volgt.**
 - `node --check frontend\script.js` gaf geen syntaxfouten.
 - De student heeft de website met de echte backend opnieuw als operationeel bevestigd.
 - De backendcode bleef ongewijzigd; de laatst bevestigde Laravel-suite is van 23 oktober (**21 tests, 103 assertions**).
@@ -160,7 +160,8 @@ Dit overzicht documenteert het werkelijke ontwikkelingsverloop achteraf en wordt
 ## 4. Resterend werk — prioriteiten voor de indiening
 
 - [x] Frontend opsplitsen in aparte scripts en DAO apart plaatsen.
-- [x] Nieuwe scripts en scriptvolgorde controleren met frontendtests (**15/15**).
+- [x] Nieuwe scripts en scriptvolgorde gecontroleerd met frontendtests (**16/16 op aparte kopie**).
+- [ ] DAO-aanpassing na overnemen opnieuw op eigen computer testen en de browserflow controleren.
 - [x] Website opnieuw controleren met de werkende Laravel-backend (door student operationeel bevestigd).
 - [x] Documentatie aanpassen aan de nieuwe mapstructuur en testresultaten.
 - [ ] Definitieve wijzigingen controleren met `git status` en committen.

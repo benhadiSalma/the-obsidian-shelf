@@ -246,7 +246,7 @@ for %f in (frontend\js\*.js) do @node --check "%f"
 ```
 
 
-**Bevestigde resultaten:** op **23 oktober 2026** slaagden 21 Laravel-tests (**103 assertions**). Op **26 oktober 2026** slaagden **15 Node.js-frontendtests** (12 functionele tests en 3 architectuurcontroles), zonder mislukkingen. De privacytest met 7 assertions zit al in de 21 Laravel-tests. In totaal zijn dus **36 automatische tests** bevestigd over de twee testmomenten. Na het opsplitsen heeft de student de website met de echte backend gecontroleerd en als operationeel bevestigd; daarvoor is geen automatisch end-to-endtestrapport beschikbaar. 
+**Bevestigde resultaten:** op **23 oktober 2026** slaagden 21 Laravel-tests (**103 assertions**). Op **26 oktober 2026** slaagden in een afzonderlijk gecontroleerde kopie **16 Node.js-frontendtests** (12 functionele tests en 4 architectuurcontroles), zonder mislukkingen. De privacytest met 7 assertions zit al in de 21 Laravel-tests. In totaal zijn dus **37 automatische tests** bevestigd over de twee testmomenten. Na de eerste opsplitsing heeft de student de website met de echte backend als operationeel bevestigd (voor de latere dependency-injectionwijziging); daarvoor is geen automatisch end-to-endtestrapport beschikbaar. 
 
 Zie [TESTING.md](docs/TESTING.md) voor alle scenario's.
    

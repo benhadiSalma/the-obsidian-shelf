@@ -156,6 +156,14 @@ reserve: bookId =>
 
 Voordeel: HTTP-verzoeken, JSON-verwerking, tokens en fouten worden op één plaats behandeld.
 
+**Testbaarheid en losse koppeling:** `BookstoreDAO` leest het `Store`-object niet rechtstreeks. De applicatie configureert bij het opstarten een functie die het token teruggeeft:
+
+```javascript
+BookstoreDAO.configure({ tokenProvider: () => Store.token });
+```
+
+Bij tests kan de HTTP-client en de tokenprovider onafhankelijk worden vervangen door testfuncties. De API-code hoeft hiervoor niet aangepast te worden. Dit past het principe *dependency injection* toe op de frontend.
+
 ### 4.3 Service Layer
 
 `ReservationService` bevat de bedrijfsregels voor reserveringen:
@@ -250,7 +258,7 @@ Als er iets fout gaat, kan de transactie teruggedraaid worden. Zo vermijdt de ap
 
 ## 8. Controle van de nieuwe structuur
 
-Op 26 oktober 2026 zijn na de opsplitsing **15 van de 15 frontendtests geslaagd**. Drie bijkomende tests controleren specifiek de volgorde van de scripts, de afwezigheid van DOM-code in het DAO-bestand en de verdeling van de verantwoordelijkheden. De student heeft de website daarna met de echte backend als operationeel bevestigd. De backendcode is niet veranderd; de laatst bevestigde Laravel-testsuite telde 21 geslaagde tests en 103 assertions op 23 oktober 2026.
+Op 26 oktober 2026 zijn na de opsplitsing **16 van de 16 frontendtests geslaagd**. Vier bijkomende tests controleren specifiek de volgorde van de scripts, de afwezigheid van DOM-code in het DAO-bestand, de verdeling van de verantwoordelijkheden en de injecteerbare HTTP-client en tokenprovider. De student heeft de oorspronkelijke modulaire versie met de echte backend als operationeel bevestigd. De extra aanpassing aan de DAO is automatisch getest maar moet na het kopiëren nog manueel worden gecontroleerd. De backendcode is niet veranderd; de laatst bevestigde Laravel-testsuite telde 21 geslaagde tests en 103 assertions op 23 oktober 2026.
 
 ---
 

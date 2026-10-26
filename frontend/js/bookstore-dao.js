@@ -16,6 +16,26 @@ class ApiError extends Error {
 // DATA ACCESS OBJECT
 
 const BookstoreDAO = {
+    // Dependencies are supplied by the application entrypoint or a test.
+    // This layer has no dependency on the UI or the DOM.
+    _getToken: () => null,
+    _fetchImpl: (...args) => fetch(...args),
+
+    configure({ tokenProvider, fetchImpl } = {}) {
+        if (tokenProvider !== undefined) {
+            if (typeof tokenProvider !== 'function') {
+                throw new TypeError('tokenProvider must be a function');
+            }
+            this._getToken = tokenProvider;
+        }
+        if (fetchImpl !== undefined) {
+            if (typeof fetchImpl !== 'function') {
+                throw new TypeError('fetchImpl must be a function');
+            }
+            this._fetchImpl = fetchImpl;
+        }
+    },
+
     async request(path, { method = 'GET', body } = {}) {
         const headers = {
             Accept: 'application/json'
@@ -25,11 +45,12 @@ const BookstoreDAO = {
             headers['Content-Type'] = 'application/json';
         }
 
-        if (Store.token) {
-            headers.Authorization = `Bearer ${Store.token}`;
+        const token = this._getToken();
+        if (token) {
+            headers.Authorization = `Bearer ${token}`;
         }
 
-        const response = await fetch(`${API_BASE_URL}${path}`, {
+        const response = await this._fetchImpl(`${API_BASE_URL}${path}`, {
             method,
             headers,
             ...(body !== undefined

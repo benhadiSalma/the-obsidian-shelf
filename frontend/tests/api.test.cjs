@@ -444,6 +444,7 @@ test('les accès API sont isolés du code de présentation', () => {
     const dao = fs.readFileSync(path.join(frontendPath, 'js/bookstore-dao.js'), 'utf8');
     assert.match(dao, /const BookstoreDAO/);
     assert.match(dao, /async request\(/);
+    assert.doesNotMatch(dao, /\bStore\b/);
     assert.doesNotMatch(dao, /document\./);
     assert.doesNotMatch(dao, /innerHTML|querySelector|addEventListener/);
 });
@@ -460,5 +461,31 @@ test('le point d’entrée est petit et les responsabilités sont réparties', (
     assert.match(reservations, /handleCancellation\(/);
     assert.match(reviews, /bindReviewForm\(/);
     assert.match(accounts, /bindAuth\(/);
+});
+
+
+// TEST 16 - Dependency injection genuinely isolates the DAO
+test('le DAO accepte un transport HTTP et un fournisseur de token injectés', async () => {
+    const { dao, store } = setup(
+        async () => { throw new Error('Original fetch must not be used'); },
+        'original-token'
+    );
+
+    let request;
+    dao.configure({
+        tokenProvider: () => 'injected-token',
+        fetchImpl: async (url, options) => {
+            request = { url, options };
+            return response({ user: { id: 42 } });
+        }
+    });
+
+    // Changing UI state must not override an injected DAO dependency.
+    store.token = 'other-token';
+    const result = await dao.me();
+
+    assert.equal(result.user.id, 42);
+    assert.equal(request.url, 'http://127.0.0.1:8000/api/me');
+    assert.equal(request.options.headers.Authorization, 'Bearer injected-token');
 });
 

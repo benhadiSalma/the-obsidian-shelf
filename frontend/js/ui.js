@@ -1,6 +1,9 @@
 /** UI coordinator; feature-specific behavior is attached by separate files. */
 'use strict';
 
+// Composition root: connect the independent DAO to the session state.
+BookstoreDAO.configure({ tokenProvider: () => Store.token });
+
 const ArchiveUI = {
     busy: new Set(),
     previousFocus: null,
