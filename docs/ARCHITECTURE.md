@@ -261,7 +261,11 @@ Als er iets fout gaat, kan de transactie teruggedraaid worden. Zo vermijdt de ap
 
 ## 8. Controle van de nieuwe structuur
 
-Op 26 oktober 2026 zijn **16 van de 16 frontendtests geslaagd** op een gecontroleerde kopie. Vier aanvullende tests controleren scriptvolgorde, scheiding tussen DAO en DOM-code, aparte UI-verantwoordelijkheden en injecteerbare afhankelijkheden. De student heeft de modulaire website vóór de laatste correcties met de echte backend als operationeel bevestigd. **De backend is op 26 oktober wél verder aangepast**: het verwijderen of behouden van reviews na annulering is toegevoegd, samen met twee nieuwe featuretests. Daardoor bevat de huidige backendcode **23 tests**. De laatst bevestigde volledige backendtestrun blijft **21 geslaagd, 103 assertions op 23 oktober**, vóór deze twee nieuwe tests. Na installatie van de huidige versie moet `php artisan test` opnieuw worden uitgevoerd; het nieuwe assertions-aantal is nog niet vastgesteld.
+Op 26 oktober 2026 zijn **16 van de 16 frontendtests geslaagd** op een gecontroleerde kopie. Vier aanvullende tests controleren scriptvolgorde, scheiding tussen DAO en DOM-code, aparte UI-verantwoordelijkheden en injecteerbare afhankelijkheden.
+
+De bijgewerkte backend bevat **23 tests**, waaronder **10 tests** voor annuleringen en twee nieuwe grensgevallen (review verwijderen na annulering van de laatste geldige reservering; review behouden als een andere geldige reservering bestaat). De student heeft de volledige Laravel-testsuite op 26 oktober **tweemaal succesvol uitgevoerd: 23 tests geslaagd, 118 assertions**.
+
+De student heeft de modulaire website eerder met de echte Laravel-backend als operationeel bevestigd. Er is geen afzonderlijke automatische browser-end-to-endtest na de laatste wijzigingen gedocumenteerd; dit onderscheid staat in [TESTING.md](TESTING.md).
 
 ---
 

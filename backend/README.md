@@ -44,7 +44,7 @@ Gebruik `migrate:fresh` niet op een bestaande database: dit verwijdert alle gege
 php artisan test
 ```
 
-**Laatst bevestigde volledige testrun (23/10/2026):** 21 Laravel-tests geslaagd, 103 assertions. De afzonderlijke privacytest met 7 assertions was hierin inbegrepen. **Huidige code (26/10/2026):** 23 tests aanwezig, waaronder 10 in `ReservationCancellationTest.php`; de 2 nieuwe tests verifiëren het verwijderen of behouden van reviews na annulering. De volledige suite op deze nieuwste code moet nog opnieuw worden uitgevoerd. Noteer de actuele test- en assertiontotalen na `php artisan test`. Zie [TESTING.md](../docs/TESTING.md).
+**Definitief resultaat (26 oktober 2026):** de volledige Laravel-testsuite werd tweemaal succesvol uitgevoerd: **23 tests geslaagd, 118 assertions, 0 mislukt**. Dit omvat **10 annuleringstests**, waaronder het verwijderen of behouden van reviews na annulering, en de privacytest. Deze test wordt niet dubbel geteld. Zie [TESTING.md](../docs/TESTING.md) voor alle scenario's en resultaten.
 
 ## Documentatie
 

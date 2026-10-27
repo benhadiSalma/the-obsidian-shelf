@@ -1,7 +1,7 @@
 # TESTING — The Obsidian Shelf
 
 > Testverslag voor **Application Architecture**.  
-> Laatste update: **26 oktober 2026**.
+> Laatste update: **27 oktober 2026** (testuitvoering: 26 oktober).
 
 [← README](../README.md) · [API](API.md) · [Architectuur](ARCHITECTURE.md) · [Planning](PLANNING.md)
 
@@ -23,15 +23,16 @@ De Laravel-tests gebruiken `RefreshDatabase` met **SQLite `:memory:`**. Daardoor
 
 ## 2. Bevestigde automatische testresultaten
 
-**Belangrijk onderscheid tussen code en uitgevoerde tests:** de Laravelresultaten hieronder zijn door de student bevestigd op **23 oktober 2026**, vóór de twee nieuwe annuleringstests. De meest recente code van **26 oktober** heeft **23 backendtests**, maar daarvoor is nog geen volledig geslaagde uitvoering bevestigd. De frontend is op 26 oktober getest op een gecontroleerde kopie met de DAO-verbetering.
+De student heeft op **26 oktober 2026 de volledige bijgewerkte Laravel-testsuite tweemaal succesvol uitgevoerd**. De resultaten zijn bevestigd door de uitvoer van `php artisan test`. De frontendtests zijn op dezelfde datum uitgevoerd op een gecontroleerde kopie van de opgesplitste frontend.
 
-| Controle | Bevestigde status |
+| Controle | Bevestigd resultaat |
 | --- | --- |
-| Laravel, eerdere codeversie (23/10) | **21 geslaagd, 103 assertions** |
-| Laravel, huidige code (26/10) | **23 tests aanwezig; volledige uitvoering nog te bevestigen** |
-| Privacytest afzonderlijk (eerder) | **1 geslaagd, 7 assertions**; inbegrepen in de 21 |
-| Frontend (26/10) | **16 geslaagd, 0 mislukt** |
-| JavaScript-syntax (26/10) | **Geen syntaxfouten vastgesteld** |
+| Backend Laravel/PHPUnit (26/10) | **23 tests geslaagd, 118 assertions, 0 mislukt**; tweemaal uitgevoerd |
+| Annuleringstests | **10 geslaagd**, waaronder CAN-09 en CAN-10; inbegrepen in de 23 |
+| Privacytest | **1 geslaagd**; inbegrepen in de 23 |
+| Frontend Node.js Test Runner (26/10) | **16 geslaagd, 0 mislukt**; gecontroleerde kopie |
+| JavaScript-syntax | **Geen syntaxfouten vastgesteld** |
+| **Totaal geautomatiseerde tests** | **39 geslaagd** (23 backend + 16 frontend) |
 
 ### Volledige Laravel-testsuite
 
@@ -41,11 +42,14 @@ Vanuit `backend/`:
 php artisan test
 ```
 
-Bevestigde uitvoer:
+Bevestigde uitvoer op 26 oktober 2026 (twee succesvolle runs):
 
 ```text
-Tests: 21 passed (103 assertions)
-Duration: 6.81s
+Tests:    23 passed (118 assertions)
+Duration: 6.07s
+
+Tests:    23 passed (118 assertions)
+Duration: 5.80s
 ```
 
 ### Privacytest afzonderlijk
@@ -56,14 +60,7 @@ Vanuit `backend/`:
 php artisan test --filter=BookReviewPrivacyTest
 ```
 
-Bevestigde uitvoer:
-
-```text
-Tests: 1 passed (7 assertions)
-Duration: 5.47s
-```
-
-**Belangrijk:** deze privacytest maakt al deel uit van de 21 Laravel-tests en wordt dus niet dubbel geteld.
+De privacytest is eveneens opgenomen in de volledige suite. **Deze wordt niet dubbel geteld**.
 
 ### Frontendtests
 
@@ -75,7 +72,7 @@ for %f in (frontend\js\*.js) do @node --check "%f"
 node --test frontend\tests\api.test.cjs
 ```
 
-Bevestigde uitvoer op 26 oktober 2026:
+Bevestigde uitvoer op de gecontroleerde kopie van 26 oktober 2026:
 
 ```text
 tests 16
@@ -85,7 +82,7 @@ cancelled 0
 skipped 0
 ```
 
-**Geen gecombineerd actueel slaagcijfer voor de nieuwste code:** 21 backendtests werden op de eerdere versie uitgevoerd, en 16 frontendtests op 26 oktober. De nieuwe backendtestmethoden (CAN-09 en CAN-10) zijn zichtbaar in de code, maar een nieuwe uitvoering van de totale Laravel-suite moet nog bevestigd worden. Daarom worden de 23 huidige backendtests **niet** als reeds geslaagd voorgesteld.
+**Afbakening:** de JavaScript-tests gebruiken simulaties van API-antwoorden. Er is geen afzonderlijke geautomatiseerde browser-end-to-endtest met de echte Laravel-server gedocumenteerd.
 
 ---
 
@@ -93,7 +90,7 @@ skipped 0
 
 De 12 bestaande frontendscenario's blijven aanwezig. Er zijn **4 aanvullende architectuurtests** toegevoegd: scriptvolgorde, scheiding van API- en DOM-code, verdeling van UI-verantwoordelijkheden en injecteerbare afhankelijkheden. Alle **16 frontendtests zijn geslaagd**.
 
-Na de modulaire frontendherstructurering is op 26 oktober ook de backend aangepast om bestaande reviews correct te verwerken bij annulering. De nieuwe testmethoden zijn toegevoegd, maar moeten nog opnieuw als onderdeel van `php artisan test` worden uitgevoerd. Na de eerste frontendopsplitsing heeft de student de echte website met Laravel als operationeel bevestigd; **de definitieve backendwijziging is niet afzonderlijk handmatig bevestigd**. Dit is geen geautomatiseerde end-to-endtest.
+Na de modulaire frontendherstructurering is op 26 oktober ook de backend aangepast om bestaande reviews correct te verwerken bij annulering. Beide nieuwe testmethoden zijn opgenomen in de **tweemaal geslaagde** Laravel-suite van 23 tests en 118 assertions. De student heeft de website met Laravel eerder als operationeel bevestigd. Een afzonderlijke geautomatiseerde browser-end-to-endtest is niet uitgevoerd.
 
 ---
 
@@ -131,7 +128,7 @@ Na de modulaire frontendherstructurering is op 26 oktober ook de backend aangepa
 | CAN-09 | Een review plaatsen en daarna de laatste geldige reservering annuleren | Bestaande review wordt verwijderd; stock wordt hersteld |
 | CAN-10 | Twee geldige reserveringen voor hetzelfde boek; één annuleren na plaatsing van een review | Review blijft bestaan, zolang de andere reservering `confirmed` is |
 
-**Status:** de oorspronkelijke 8 annuleringstests zijn in de eerdere versie geslaagd; daarbij werden **31 assertions** gemeld. **CAN-09 en CAN-10 zijn toegevoegd op 26 oktober, maar hun slagen is nog niet bevestigd** door een nieuwe Laravel-testrun. Het juiste nieuwe aantal assertions moet uit de uitvoer van de tests worden overgenomen.
+**Status (26 oktober 2026): alle 10 annuleringstests geslaagd**, inclusief CAN-09 en CAN-10. Ze maken deel uit van de volledige Laravel-suite met **23 geslaagde tests en 118 assertions**.
 
 ### 3.3 `BookReviewPrivacyTest.php` — 1 test
 
@@ -159,9 +156,9 @@ De standaardbestanden `tests/Unit/ExampleTest.php` en `tests/Feature/ExampleTest
 | `ReservationCancellationTest.php` | 10 |
 | `BookReviewPrivacyTest.php` | 1 |
 | Twee `ExampleTest.php`-bestanden | 2 |
-| **Totaal aanwezig in de nieuwste broncode** | **23** |
+| **Totaal geslaagd in de actuele testsuite** | **23** |
 
-Het aantal **23** is gebaseerd op de aanwezige testmethoden, **niet** op een al bevestigde geslaagde testrun. De vorige uitvoering van 21 tests is hierboven apart beschreven.
+**Bevestigd door twee volledige uitvoeringen op 26 oktober 2026: 23 tests geslaagd, 118 assertions.**
 
 ---
 
@@ -269,7 +266,7 @@ De volledige opstartprocedure voor een manuele test staat in [README.md](../READ
 | Annulering na de deadline | Test op de grens van exact 24 uur |
 | Onbevoegde toegang | Authenticatie- en eigenaarschapstests |
 | Ongeldige of dubbele review | Validatie en reserveringscontrole |
-| Review blijft bestaan zonder geldige reservering na annulering | Voorwaardelijke reviewverwijdering in `ReservationService` en testscenario's CAN-09/CAN-10 (uitvoering nog bevestigen) |
+| Review blijft bestaan zonder geldige reservering na annulering | Voorwaardelijke reviewverwijdering in `ReservationService` en testscenario's CAN-09/CAN-10 (CAN-09 en CAN-10 geslaagd op 26 oktober) |
 | Lekken van persoonlijke gegevens | Privacytest voor publieke reviews |
 | Foutieve interface na annulering | Frontendtests voor voorraad, status en tellers |
 

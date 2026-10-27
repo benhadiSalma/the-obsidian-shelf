@@ -247,7 +247,7 @@ for %f in (frontend\js\*.js) do @node --check "%f"
 ```
 
 
-**Testresultaten en huidige status (26 oktober 2026):** op **23 oktober** slaagden **21 Laravel-tests (103 assertions)** op een eerdere codeversie. De huidige code bevat **23 backendtests**: de oorspronkelijke 21 en 2 nieuwe annuleringstests. **Een geslaagde volledige uitvoering van deze bijgewerkte backendversie is nog niet bevestigd**; voer hiervoor opnieuw `php artisan test` uit en noteer het echte resultaat. Op **26 oktober** slaagden **16/16 frontendtests** (12 functionele en 4 architectuurtests, op een gecontroleerde kopie). De privacytest zit in de backendtests en mag niet dubbel geteld worden. De student bevestigde eerder dat de modulaire website operationeel was met de echte backend; de laatste backendwijziging en DAO-injectie vereisen nog een volledige controle van de gebruikersflow.
+**Bevestigde testresultaten (26 oktober 2026):** de volledige Laravel-suite is **tweemaal succesvol uitgevoerd: 23 van de 23 tests geslaagd, 118 assertions, 0 mislukt**. Daarin zitten de 10 annuleringstests (inclusief CAN-09 en CAN-10) en de privacytest; deze worden niet dubbel geteld. Op een gecontroleerde kopie zijn ook **16 van de 16 frontendtests geslaagd, 0 mislukt** (12 functionele en 4 architectuurtests). **Totaal: 39 geslaagde geautomatiseerde tests.** De student heeft eerder een werkende website met de echte Laravel-backend bevestigd; er is geen afzonderlijk gedocumenteerde automatische browser-end-to-endtest na de laatste aanpassingen.
 
 Zie [TESTING.md](docs/TESTING.md) voor alle scenario's.
    
@@ -318,14 +318,6 @@ ChatGPT werd gebruikt bij het analyseren van de opdracht, het genereren en aanpa
 - [Node.js Test Runner](https://nodejs.org/api/test.html) — JavaScript-testomgeving.
 - [Google Fonts](https://fonts.google.com/) — Playfair Display en Lora.
 - [Transparent Textures](https://www.transparenttextures.com/) — achtergrondtextuur gebruikt in het CSS-ontwerp.
-
-
-### Definitieve testresultaten — 26 oktober 2026
-
-- Backend (Laravel/PHPUnit): 23 tests geslaagd, 118 assertions.
-- Frontend (Node.js Test Runner): 16 tests geslaagd.
-- Totaal: 39 geslaagde geautomatiseerde tests.
-- De 10 annuleringstests omvatten ook het verwijderen of behouden van reviews na een annulering.
 
 
 ## Beperkingen

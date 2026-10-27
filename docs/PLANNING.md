@@ -1,7 +1,7 @@
 # PLANNING — The Obsidian Shelf
 
 > Projectplanning en voortgang voor **Application Architecture**.  
-> Bijgewerkt op **26 oktober 2026**.
+> Bijgewerkt op **27 oktober 2026**.
 
 [← README](../README.md) · [Architectuur](ARCHITECTURE.md) · [Testing](TESTING.md)
 
@@ -77,11 +77,11 @@ De bezoeker kan boeken bekijken; na login kan een gebruiker reserveren, annulere
 
 - [x] 10 specifieke backend-API-tests toevoegen.
 - [x] De oorspronkelijke 8 annuleringstests toevoegen en uitvoeren (bevestigd vóór 26 oktober).
-- [x] Twee nieuwe annuleringstests toevoegen op 26 oktober (review verwijderen of behouden); **deze twee tests zijn nog niet als geslaagd bevestigd**.
+- [x] Twee nieuwe annuleringstests toevoegen op 26 oktober (review verwijderen of behouden); **beide geslaagd** in de definitieve Laravel-suite.
 - [x] Eerdere volledige PHP-testsuite uitvoeren: **21 tests, 103 assertions geslaagd** op 23 oktober 2026.
-- [ ] Actuele PHP-testsuite met **23 aanwezige tests** uitvoeren en resultaat plus assertions registreren.
+- [x] Definitieve Laravel-suite op 26 oktober tweemaal uitvoeren: **23 tests geslaagd, 118 assertions**.
 - [x] Oorspronkelijke JavaScript-testsuite uitvoeren: **12 tests geslaagd, 0 mislukt** op 23 oktober 2026.
-- [x] Herstructurering van de frontend testen: **16 tests geslaagd, 0 mislukt** op 26 oktober 2026, inclusief 4 architectuurcontroles (gecontroleerd op een aparte kopie; hertest op eigen computer volgt).
+- [x] Herstructurering van de frontend testen: **16 tests geslaagd, 0 mislukt** op 26 oktober 2026, inclusief 4 architectuurcontroles (gecontroleerd op een aparte kopie).
 - [x] Aanvullende frontendtests voor annulering en tellercontrole toevoegen.
 - [x] Nieuwe Laravel-privacytest uitvoeren: **1 test geslaagd, 7 assertions** (deel van de 21 backendtests).
 - [x] Manuele browsercontroles van de gebruikersflow uitvoeren (door student gerapporteerd).
@@ -97,10 +97,10 @@ De bezoeker kan boeken bekijken; na login kan een gebruiker reserveren, annulere
 - [x] Gebruikte bronnen en ChatGPT expliciet documenteren.
 - [x] Deploymentinstructies voorzien voor de gekozen technologie.
 - [x] Publieke GitHub-repository met `backend/` en `frontend/`.
-- [ ] Controleren of de **laatste versie** (inclusief twee nieuwe annuleringstests en deze documentatie) op de in te dienen GitHub-branch staat.
+- [x] De bijgewerkte code en eerdere documentatie naar GitHub `main` pushen; commit `e1b428f` is bevestigd op 26 oktober.
 - [x] Controleren en verwijderen van tijdelijk back-upbestand `frontend/script-casse-backup.js` uit de Git-repository.
 - [x] Laatste handmatige tests uitvoeren.
-- [ ] Definitieve documentatie (README, API, ARCHITECTURE, TESTING, PLANNING en backend-README) controleren, committen en publiceren.
+- [x] Definitieve documentatie in lijn brengen met de bevestigde tests van 26 oktober; laatste tekstcorrecties op 27 oktober voorbereid voor publicatie.
 
 ---
 
@@ -130,7 +130,7 @@ Op 22 oktober 2026 heb ik verder gewerkt aan:
 - Laravel: **20 geslaagde tests en 96 assertions**.
 - JavaScript: **8 geslaagde tests**.
 
-### 23 oktober 2026 — Finale tests en kwaliteitscontrole
+### 23 oktober 2026 — Tussentijdse tests en kwaliteitscontrole
 
 - `php artisan test`: **21 tests geslaagd, 103 assertions**.
 - `php artisan test --filter=BookReviewPrivacyTest`: **1 test geslaagd, 7 assertions** (onderdeel van de 21).
@@ -145,12 +145,13 @@ Naar aanleiding van feedback over *Separation of Concerns* heb ik de JavaScript-
 
 - Scripts in `frontend/index.html` in de vereiste volgorde geladen.
 - De oorspronkelijke frontendtests behouden en vier controles op de architectuur toegevoegd.
-- **15/15 frontendtests geslaagd in Windows CMD na opsplitsing; daarna 16/16 geslaagd in een aparte gecontroleerde kopie na verbetering van de DAO. Een laatste lokale hertest volgt.**
+- **15/15 frontendtests geslaagd in Windows CMD na opsplitsing; daarna 16/16 geslaagd op een aparte gecontroleerde kopie na verbetering van de DAO.**
 - `node --check frontend\script.js` gaf geen syntaxfouten.
 - De student heeft de website met de echte backend opnieuw als operationeel bevestigd.
 - Later op 26 oktober is de backendcode bijgewerkt: reviews worden na een annulering alleen verwijderd als er voor hetzelfde boek geen andere geldige reservering van de gebruiker bestaat.
-- `ReservationCancellationTest.php` is van 8 naar **10 testmethoden** uitgebreid; in totaal bevat de nieuwste backendcode **23 tests**. Voor die nieuwe volledige backendversie is nog geen geslaagde testrun bevestigd.
-- De laatst bevestigde volledige Laravel-suite is van 23 oktober (**21 tests, 103 assertions**) en geldt voor de eerdere versie.
+- `ReservationCancellationTest.php` is van 8 naar **10 testmethoden** uitgebreid. De nieuwe backendcode heeft **23 tests**; op 26 oktober zijn **alle 23 tests tweemaal geslaagd met 118 assertions**.
+- De eerdere uitvoering van 23 oktober (**21 tests, 103 assertions**) blijft in de tijdlijn staan als historisch resultaat, niet als de actuele status.
+- De documentatie is op 26 oktober naar GitHub `main` gepusht (`e1b428f`); de eindredactie van de testresultaten volgt op 27 oktober.
 
 ### Totale tijdsbesteding
 
@@ -162,16 +163,16 @@ Dit overzicht documenteert het werkelijke ontwikkelingsverloop achteraf en wordt
 
 ---
 
-## 4. Resterend werk — prioriteiten voor de indiening
+## 4. Opleverstatus
 
 - [x] Frontend opsplitsen in aparte scripts en DAO apart plaatsen.
 - [x] Nieuwe scripts en scriptvolgorde gecontroleerd met frontendtests (**16/16 op aparte kopie**).
-- [ ] De definitieve DAO- en backendwijzigingen samen opnieuw op de eigen computer testen en de browserflow controleren.
+- [x] De volledige bijgewerkte backendtestsuite op de eigen computer tweemaal uitvoeren (**23 tests, 118 assertions**).
 - [x] Website opnieuw controleren met de werkende Laravel-backend (door student operationeel bevestigd).
 - [x] Documentatie aanpassen aan de nieuwe mapstructuur en testresultaten.
-- [ ] Laatste backendtests uitvoeren met `php artisan test` en het werkelijke resultaat noteren.
-- [ ] Definitieve wijzigingen controleren met `git status` en committen.
-- [ ] Naar de publieke GitHub-repository pushen en controleren of de definitieve bestanden op de in te dienen branch staan.
+- [x] Definitieve testresultaten in het testverslag vastleggen.
+- [x] Code en documentatie op GitHub `main` gepubliceerd op 26 oktober (commit `e1b428f`).
+- [ ] De laatste tekstcorrecties van 27 oktober committen en pushen.
 - [ ] GitHub-URL indienen via het opleidingsplatform.
 
 **Indieningsdatum:** woensdag **28 oktober 2026 om 23:59** volgens de opgegeven opdrachtinformatie.
@@ -196,7 +197,7 @@ Dit overzicht documenteert het werkelijke ontwikkelingsverloop achteraf en wordt
 | Projectnaam | The Obsidian Shelf |
 | Vak | Application Architecture |
 | Werkelijke startdatum | **21 oktober 2026** |
-| Laatste update van dit document | **26 oktober 2026** |
+| Laatste update van dit document | **27 oktober 2026** |
 | Geschatte gewerkte uren | **Ongeveer 15 uur tot en met 22 oktober (schatting); geen aparte urenregistratie voor 23 oktober** |
 | Gebruikte technologieën | PHP, Laravel, SQLite, Sanctum, HTML, CSS, JavaScript |
 | Versiebeheer | Git en GitHub |
@@ -208,6 +209,7 @@ Dit overzicht documenteert het werkelijke ontwikkelingsverloop achteraf en wordt
 Een bevestigd voorbeeld uit de Git-geschiedenis:
 
 - `1d9031a` — **Organize project documentation and README**.
+- `e1b428f` — **Werk documentatie bij met nieuwe annuleringstests en architectuur** (push naar `main` bevestigd op 26 oktober).
 
 Deze commit verplaatste het hoofd-README-bestand naar de root en organiseerde de documentatie van het project.
 
@@ -227,7 +229,7 @@ Ook testing speelde een belangrijke rol. Door automatische tests uit te voeren k
 
 De totale ontwikkelingstijd was relatief kort, ongeveer 15 uur verspreid over twee dagen. Daarom heb ik prioriteit gegeven aan de verplichte functionaliteiten, de belangrijkste bedrijfsregels, automatische tests en documentatie.
 
-De wijzigingen van 26 oktober tonen hoe feedback over onderhoudbaarheid is toegepast. Een extra correctie aan de annuleringslogica houdt ook rekening met reeds gepubliceerde reviews. De laatste testrun van de bijgewerkte backend, de controle van de definitieve GitHub-branch en de indiening moeten nog bevestigd worden.
+De wijzigingen van 26 oktober tonen hoe feedback over onderhoudbaarheid is toegepast. Een extra correctie aan de annuleringslogica houdt ook rekening met reeds gepubliceerde reviews. De bijgewerkte backend is op 26 oktober tweemaal succesvol getest (**23 tests, 118 assertions**), en de code met bijgewerkte documentatie is naar de publieke GitHub-branch `main` gepusht. Deze documentatie is op 27 oktober nog tekstueel bijgewerkt voor een consistente eindversie.
 
 ---
 
